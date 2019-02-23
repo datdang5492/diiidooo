@@ -7,7 +7,7 @@
           <div class="card-deck">
             <div class="col-md-12 col-lg-4">
               <div class="card mb-4">
-                <img class="card-img-top" src="../images/common/card-1.jpg" alt="Card image cap">
+                <img class="card-img-top" src="images/common/card-1.jpg" alt="Card image cap">
                 <div class="card-body">
                   <h4 class="card-title">Find Great Places to Work While Travelling</h4>
                   <p
@@ -20,7 +20,7 @@
 
             <div class="col-md-12 col-lg-4">
               <div class="card mb-4">
-                <img class="card-img-top" src="../images/common/card-3.jpg" alt="Card image cap">
+                <img class="card-img-top" src="images/common/card-3.jpg" alt="Card image cap">
                 <div class="card-body">
                   <h4 class="card-title">Quick Tips for Improving Your Website's Design</h4>
                   <p
@@ -33,7 +33,7 @@
 
             <div class="col-md-12 col-lg-4">
               <div class="card mb-4">
-                <img class="card-img-top" src="../images/common/card-2.jpg" alt="Card image cap">
+                <img class="card-img-top" src="images/common/card-2.jpg" alt="Card image cap">
                 <div class="card-body">
                   <h4 class="card-title">A Designer's Tips While Travelling and Working</h4>
                   <p

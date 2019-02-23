@@ -5,7 +5,7 @@
           <div class="app-screenshot col-lg-4 col-md-12 col-sm-12 px-0 py-5">
             <img
               class="mt-auto mb-auto"
-              src="../images/app-promo/iphone-app-screenshot.png"
+              src="images/iphone-app-screenshot.png"
               alt="App Screenshot - Shards App Promo Demo Page"
             >
           </div>

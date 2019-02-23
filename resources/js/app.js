@@ -6,13 +6,16 @@ import VueResource from 'vue-resource';
 import VeeValidate from 'vee-validate';
 import VueRouter from 'vue-router';
 import Routes from './routes';
+import BootstrapVue from 'bootstrap-vue'
 
 // shards
 // https://designrevision.com/docs/shards-vue/getting-started
 import ShardsVue from 'shards-vue'
 import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'shards-ui/dist/css/shards.css'
 import 'shards-ui/dist/css/shards-extras.min.css'
+
 
 // font awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -21,6 +24,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faCoffee)
 Vue.component('fa', FontAwesomeIcon)
 
+
+
+Vue.use(BootstrapVue);
 Vue.use(ShardsVue);
 Vue.use(VeeValidate);
 Vue.use(VueResource);

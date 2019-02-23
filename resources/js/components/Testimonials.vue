@@ -6,7 +6,7 @@
         <div class="row">
           <div class="col-md-4 testimonial text-center">
             <div class="avatar rounded-circle with-shadows mb-3 ml-auto mr-auto">
-              <img src="../images/common/avatar-1.jpeg" class="w-100" alt="Testimonial Avatar">
+              <img src="images/common/avatar-1.jpeg" class="w-100" alt="Testimonial Avatar">
             </div>
             <h5 class="mb-1">Osbourne Tranter</h5>
             <span class="text-muted d-block mb-2">CEO at Megacorp</span>
@@ -15,7 +15,7 @@
 
           <div class="col-md-4 testimonial text-center">
             <div class="avatar rounded-circle with-shadows mb-3 ml-auto mr-auto">
-              <img src="../images/common/avatar-2.jpeg" class="w-100" alt="Testimonial Avatar">
+              <img src="images/common/avatar-2.jpeg" class="w-100" alt="Testimonial Avatar">
             </div>
             <h5 class="mb-1">Darrin Ollie</h5>
             <span class="text-muted d-block mb-2">CEO at Megacorp</span>
@@ -24,7 +24,7 @@
 
           <div class="col-md-4 testimonial text-center">
             <div class="avatar rounded-circle with-shadows mb-3 ml-auto mr-auto">
-              <img src="../images/common/avatar-3.jpeg" class="w-100" alt="Testimonial Avatar">
+              <img src="images/common/avatar-3.jpeg" class="w-100" alt="Testimonial Avatar">
             </div>
             <h5 class="mb-1">Quinton Bruce</h5>
             <span class="text-muted d-block mb-2">CEO at Megacorp</span>
