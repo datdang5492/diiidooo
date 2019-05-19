@@ -2,9 +2,9 @@
     <div>
         <!-- Log in modal -->
         <b-modal id="loginModal" title="Welcome back :)">
-            <form class="mb-3">
+            <form class="mb-3" @submit.prevent="handleLogin">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Email">
+                    <input type="text" class="form-control" placeholder="Email" v-model="user.email">
                     <div class="input-group-append">
                   <span class="input-group-text">
                     <i class="far fa-envelope"></i>
@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Password">
+                    <input type="text" class="form-control" :type="'password'" placeholder="Password" v-model="user.password">
                     <div class="input-group-append">
                   <span class="input-group-text">
                     <i class="fa fa-lock"></i>
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="custom-control custom-checkbox mb-3">
-                    <input type="checkbox" class="custom-control-input" id="remember_me">
+                    <input type="checkbox" class="custom-control-input" id="remember_me" v-model="user.remember_me">
                     <label class="custom-control-label" for="remember_me">Remember me</label>
                 </div>
                 <button type="submit" class="btn btn-success btn-block font-weight-bold mb-3">Log in</button>
@@ -81,7 +81,7 @@
                 </div>
                 <!-- Password -->
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Password">
+                    <input type="text" class="form-control" :type="'password'" placeholder="Password">
                     <div class="input-group-append">
                   <span class="input-group-text">
                     <i class="fa fa-lock"></i>
@@ -147,9 +147,28 @@
         name: "authentication",
         components: {},
         data() {
-            return {};
+            return {
+                csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                user: {
+                    email: 'dang@gmail.com',
+                    password: '123456',
+                    remember_me: false
+                }
+            };
         },
-        methods: {},
+        methods: {
+            handleLogin: function () {
+                this.$http.post('http://localhost:8080/login', {
+                    _token: this.csrf,
+                    email: this.user.email,
+                    password: this.user.password,
+                    remember_me: this.user.remember_me
+                }).then(function (data) {
+                    console.log(data);
+                });
+                return;
+            }
+        },
         created: function () {
         }
     };

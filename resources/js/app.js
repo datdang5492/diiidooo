@@ -36,6 +36,7 @@ Vue.use(ShardsVue);
 Vue.use(VeeValidate);
 Vue.use(VueResource);
 Vue.config.productionTip = false;
+Vue.http.options.emulateJSON = true;
 Vue.use(VueRouter);
 
 

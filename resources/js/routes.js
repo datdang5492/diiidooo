@@ -17,6 +17,5 @@ export default [
             {path: 'reviews-about-you', component: review},
             {path: 'reviews-by-you', component: review},
         ]
-    },
-
+    }
 ]
