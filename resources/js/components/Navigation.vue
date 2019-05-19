@@ -1,7 +1,7 @@
 <template>
-    <div class="container-fluid navivagation">
+    <div class="container-fluid navigation border-bottom">
         <nav class="navbar navbar-expand-lg navbar-dark pt-4 px-0">
-            <a class="navbar-brand mr-5" href="#">
+            <a class="navbar-brand mr-5" href="/">
                 <img
                     src="images/dido_logo.png"
                     class="mr-2"
@@ -23,7 +23,7 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ml-auto font-weight-normal">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">How it works</a>
+                        <a class="nav-link" href="#">My Deliveries</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
@@ -55,15 +55,18 @@
 
 <style scoped>
     @media (min-width: 1500px) {
-        .navivagation {
+        .navigation {
             padding: 0px 50px 0px 50px;
         }
     }
-    .container {
-        background-color: #ffffff;
-    }
+
     .navbar-expand-lg .navbar-nav .nav-link {
         padding-right: 1.625rem;
         padding-left: 0.7rem;
     }
+
+    .navigation .navbar-collapse .nav-item a {
+        color: #5A6169
+    }
+
 </style>

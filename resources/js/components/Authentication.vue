@@ -2,12 +2,12 @@
     <div>
         <!-- Log in modal -->
         <b-modal id="loginModal" title="Welcome back :)">
-            <form>
+            <form class="mb-3">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="Email">
                     <div class="input-group-append">
                   <span class="input-group-text">
-                    <i class="fa fa-envelope"></i>
+                    <i class="far fa-envelope"></i>
                   </span>
                     </div>
                 </div>
@@ -23,9 +23,22 @@
                     <input type="checkbox" class="custom-control-input" id="remember_me">
                     <label class="custom-control-label" for="remember_me">Remember me</label>
                 </div>
-                <button type="submit" class="btn btn-success btn-block font-weight-bold">Log in</button>
-                <a href="#" v-b-modal.forgotPassModal class="font-weight-normal">Forgot password ?</a>
+                <button type="submit" class="btn btn-success btn-block font-weight-bold mb-3">Log in</button>
+                <a href="#" v-b-modal.forgotPassModal class="font-weight-normal float-right mb-3">Forgot password ?</a>
             </form>
+
+            <div>
+                <a href="#" class="fb btn btn-outline">
+                    <fa :icon="{ prefix: 'fab', iconName: 'facebook' }" class="float-left"/>
+                    <span>Login with Facebook</span>
+
+                </a>
+                <a href="#" class="google btn btn-outline">
+                    <fa :icon="{ prefix: 'fab', iconName: 'google' }" class="float-left"/>
+                    <span>Login with Google</span>
+                </a>
+            </div>
+
             <div slot="modal-footer">
                 <p>
                     Don't have an account yet?
@@ -82,6 +95,19 @@
                 </div>
                 <button type="submit" class="btn btn-success btn-block font-weight-bold">Sign up</button>
             </form>
+            <div class="text-center">Or</div>
+            <div>
+                <a href="#" class="fb btn btn-outline">
+                    <fa :icon="{ prefix: 'fab', iconName: 'facebook' }" class="float-left"/>
+                    <span>Connect with Facebook</span>
+
+                </a>
+                <a href="#" class="google btn btn-outline">
+                    <fa :icon="{ prefix: 'fab', iconName: 'google' }" class="float-left"/>
+                    <span>Connect with Google</span>
+                </a>
+            </div>
+
             <div slot="modal-footer">
                 <p>
                     Already have an account?
@@ -99,7 +125,7 @@
                     <input type="text" class="form-control" placeholder="Email">
                     <div class="input-group-append">
                       <span class="input-group-text">
-                        <i class="fa fa-envelope"></i>
+                        <i class="far fa-envelope"></i>
                       </span>
                     </div>
                 </div>
@@ -130,4 +156,26 @@
 </script>
 
 <style scoped>
+    .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 4px;
+        margin: 5px 0;
+        opacity: 0.85;
+        display: inline-block;
+        font-size: 17px;
+        line-height: 20px;
+        text-decoration: none;
+    }
+
+    .fb {
+        background-color: #3B5998;
+        color: white;
+    }
+
+    .google {
+        background-color: #dd4b39;
+        color: white;
+    }
 </style>
