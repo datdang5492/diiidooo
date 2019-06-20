@@ -28,11 +28,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="this.$authStatus !== '1'">
                         <a class="nav-link" href="#" v-b-modal.loginModal>Log in</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="this.$authStatus !== '1'">
                         <b-btn variant="outline-success" v-b-modal.signupModal>Sign up</b-btn>
+                    </li>
+                    <li class="nav-item" v-if="this.$authStatus === '1'">
+                        <a class="nav-link" href="#" @click="handleSignOut()">Sign out</a>
                     </li>
                 </ul>
             </div>
@@ -45,10 +48,21 @@
         name: "navigation",
         components: {},
         data() {
-            return {};
+            return {
+
+            };
         },
-        methods: {},
+        methods: {
+            handleSignOut: function () {
+                this.$http.post('logout', {
+
+                }).then(function (data) {
+                    window.location.reload();
+                });
+            },
+        },
         created: function () {
+            console.log(this.$authStatus);
         }
     };
 </script>

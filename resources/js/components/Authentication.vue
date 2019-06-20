@@ -12,7 +12,8 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" :type="'password'" placeholder="Password" v-model="user.password">
+                    <input type="text" class="form-control" :type="'password'" placeholder="Password"
+                           v-model="user.password">
                     <div class="input-group-append">
                   <span class="input-group-text">
                     <i class="fa fa-lock"></i>
@@ -51,10 +52,10 @@
 
         <!-- Sign up modal -->
         <b-modal id="signupModal" title="Become a member!">
-            <form>
+            <form @submit.prevent="handleSignUp">
                 <!-- Email -->
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Email">
+                    <input type="text" class="form-control" placeholder="Email" v-model="guest.email">
                     <div class="input-group-append">
                   <span class="input-group-text">
                     <i class="far fa-envelope"></i>
@@ -63,7 +64,7 @@
                 </div>
                 <!-- First Name -->
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="First Name">
+                    <input type="text" class="form-control" placeholder="First Name" v-model="guest.name">
                     <div class="input-group-append">
                   <span class="input-group-text">
                     <i class="far fa-user"></i>
@@ -72,7 +73,8 @@
                 </div>
                 <!--  Last Name -->
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Last Name">
+                    <input type="text" class="form-control" placeholder="Last Name"
+                           v-model="guest.password_confirmation">
                     <div class="input-group-append">
                   <span class="input-group-text">
                     <i class="far fa-user"></i>
@@ -81,7 +83,19 @@
                 </div>
                 <!-- Password -->
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" :type="'password'" placeholder="Password">
+                    <input type="text" class="form-control" :type="'password'" placeholder="Password"
+                           v-model="guest.password">
+                    <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="fa fa-lock"></i>
+                  </span>
+                    </div>
+                </div>
+
+                <!-- Password Confirmation-->
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" :type="'password'" placeholder="Password"
+                           v-model="guest.password_confirmation">
                     <div class="input-group-append">
                   <span class="input-group-text">
                     <i class="fa fa-lock"></i>
@@ -148,26 +162,43 @@
         components: {},
         data() {
             return {
-                csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                guest: {
+                    email: '',
+                    name: '',
+                    password: '',
+                    password_confirmation: ''
+                },
+
                 user: {
-                    email: 'dang@gmail.com',
-                    password: '123456',
+                    email: '',
+                    password: '',
                     remember_me: false
                 }
             };
         },
         methods: {
             handleLogin: function () {
-                this.$http.post('http://localhost:8080/login', {
-                    _token: this.csrf,
+                this.$http.post('login', {
                     email: this.user.email,
                     password: this.user.password,
                     remember_me: this.user.remember_me
                 }).then(function (data) {
-                    console.log(data);
+                    window.location.reload();
                 });
-                return;
+            },
+
+            handleSignUp: function () {
+                this.$http.post('register', {
+                    email: this.guest.email,
+                    name: this.guest.name,
+                    password: this.guest.password,
+                    password_confirmation: this.guest.password
+                }).then(function (data) {
+                    window.location.reload();
+                });
             }
+
+
         },
         created: function () {
         }

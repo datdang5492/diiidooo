@@ -2,7 +2,6 @@
     <div class="shards-app-promo-page--1">
         <authentication></authentication>
         <navigation></navigation>
-
         <router-view></router-view>
     </div>
 </template>
@@ -22,7 +21,8 @@
             Authentication
         },
         data() {
-            return {};
+            return {
+            };
         },
         methods: {},
         created: function () {
