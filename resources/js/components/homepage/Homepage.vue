@@ -20,14 +20,9 @@
         },
         data() {
             return {
-                title: "dynamic title",
-                component: "form-two"
             };
         },
         methods: {
-            updateTitle: function (e) {
-                this.title = e;
-            }
         },
         created: function () {
         }
@@ -35,7 +30,5 @@
 </script>
 
 <style scoped>
-    .shards-app-promo-page--1 .welcome {
-        min-height: unset;
-    }
+
 </style>

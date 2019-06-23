@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid navigation border-bottom">
+    <div class="container-fluid navigation border-bottom mb-5">
         <nav class="navbar navbar-expand-lg navbar-dark pt-4 px-0">
             <a class="navbar-brand mr-5" href="/">
                 <img
@@ -23,7 +23,12 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ml-auto font-weight-normal">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">My Deliveries</a>
+                        <a class="nav-link" href="#">
+                            <i class="fa fa-comment-dollar mr-2"></i>Dido transfer
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Shipment status</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>

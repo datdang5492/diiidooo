@@ -1,5 +1,5 @@
 <template>
-    <div class="shards-app-promo-page--1">
+    <div class="">
         <authentication></authentication>
         <navigation></navigation>
         <router-view></router-view>

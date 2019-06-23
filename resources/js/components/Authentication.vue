@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Log in modal -->
-        <b-modal id="loginModal" title="Welcome back :)">
+        <b-modal id="loginModal" ref="loginModal" title="Welcome back :)" class="">
             <form class="mb-3" @submit.prevent="handleLogin">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="Email" v-model="user.email">
@@ -25,16 +25,16 @@
                     <label class="custom-control-label" for="remember_me">Remember me</label>
                 </div>
                 <button type="submit" class="btn btn-success btn-block font-weight-bold mb-3">Log in</button>
-                <a href="#" v-b-modal.forgotPassModal class="font-weight-normal float-right mb-3">Forgot password ?</a>
+                <a href="#" @click="toggleForgotPasswordModal()" class="font-weight-normal float-right mb-3">Forgot password ?</a>
             </form>
 
             <div>
-                <a href="#" class="fb btn btn-outline">
+                <a href="#" class="fb btn btn-outline text-white">
                     <fa :icon="{ prefix: 'fab', iconName: 'facebook' }" class="float-left"/>
                     <span>Login with Facebook</span>
 
                 </a>
-                <a href="#" class="google btn btn-outline">
+                <a href="#" class="google btn btn-outline text-white">
                     <fa :icon="{ prefix: 'fab', iconName: 'google' }" class="float-left"/>
                     <span>Login with Google</span>
                 </a>
@@ -43,15 +43,14 @@
             <div slot="modal-footer">
                 <p>
                     Don't have an account yet?
-                    <a href="#" v-b-modal.signupModal class="font-weight-bold">Sign up</a>
+                    <a href="#" @click="toggleLoginModal()" class="font-weight-bold">Sign up</a>
                 </p>
             </div>
         </b-modal>
         <!-- End of Login Modal -->
 
-
         <!-- Sign up modal -->
-        <b-modal id="signupModal" title="Become a member!">
+        <b-modal id="signupModal" ref="signupModal" title="Become a member!">
             <form @submit.prevent="handleSignUp">
                 <!-- Email -->
                 <div class="input-group mb-3">
@@ -111,12 +110,12 @@
             </form>
             <div class="text-center">Or</div>
             <div>
-                <a href="#" class="fb btn btn-outline">
+                <a href="#" class="fb btn btn-outline text-white">
                     <fa :icon="{ prefix: 'fab', iconName: 'facebook' }" class="float-left"/>
                     <span>Connect with Facebook</span>
 
                 </a>
-                <a href="#" class="google btn btn-outline">
+                <a href="#" class="google btn btn-outline text-white">
                     <fa :icon="{ prefix: 'fab', iconName: 'google' }" class="float-left"/>
                     <span>Connect with Google</span>
                 </a>
@@ -125,14 +124,14 @@
             <div slot="modal-footer">
                 <p>
                     Already have an account?
-                    <a href="#" v-b-modal.loginModal class="font-weight-bold">Log In</a>
+                    <a href="#" @click="toggleLoginModal()" class="font-weight-bold">Log In</a>
                 </p>
             </div>
         </b-modal>
         <!-- End of Sign up Modal -->
 
         <!--Forgot password modal-->
-        <b-modal id="forgotPassModal" title="Reset Password">
+        <b-modal ref="forgotPassModal" title="Reset Password">
             <form>
                 <div class="input-group mb-3">
                     <p>Enter your registered email, we will send you the link to reset your password. </p>
@@ -148,7 +147,7 @@
             <div slot="modal-footer">
                 <p>
                     Already have an account?
-                    <a href="#" v-b-modal.loginModal class="font-weight-bold">Back to Login</a>
+                    <a href="#" @click="toggleForgotPasswordModal" class="font-weight-bold">Back to Login</a>
                 </p>
             </div>
         </b-modal>
@@ -177,6 +176,14 @@
             };
         },
         methods: {
+            toggleLoginModal: function () {
+                this.$refs['signupModal'].toggle()
+                this.$refs['loginModal'].toggle()
+            },
+            toggleForgotPasswordModal: function () {
+                this.$refs['forgotPassModal'].toggle()
+                this.$refs['loginModal'].toggle()
+            },
             handleLogin: function () {
                 this.$http.post('login', {
                     email: this.user.email,

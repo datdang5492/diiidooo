@@ -8,15 +8,15 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+// vue bootstrap datepicker
+// https://www.npmjs.com/package/vue-bootstrap-datetimepicker
+import datePicker from 'vue-bootstrap-datetimepicker';
+import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
+Vue.use(datePicker);
+
 // routing
 import VueRouter from 'vue-router';
 import Routes from './routes'
-
-// shards
-// https://designrevision.com/docs/shards-vue/getting-started
-import ShardsVue from 'shards-vue'
-import 'shards-ui/dist/css/shards.css'
-import 'shards-ui/dist/css/shards-extras.min.css'
 
 // font awesome
 import {library} from '@fortawesome/fontawesome-svg-core'
@@ -29,7 +29,6 @@ library.add(faCoffee)
 Vue.component('fa', FontAwesomeIcon)
 
 Vue.use(BootstrapVue);
-Vue.use(ShardsVue);
 Vue.use(VeeValidate);
 Vue.use(VueResource);
 Vue.config.productionTip = false;

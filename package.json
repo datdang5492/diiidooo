@@ -21,6 +21,7 @@
         "sass-loader": "^7.1.0",
         "shards-vue": "^1.0.6",
         "vee-validate": "^2.1.4",
+        "vue-bootstrap-datetimepicker": "^5.0.1",
         "vue-resource": "^1.5.1",
         "vue-router": "^3.0.2"
     },
