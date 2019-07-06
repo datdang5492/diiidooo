@@ -95,4 +95,20 @@
         border-right: 1px solid rgb(220, 224, 224) !important;
     }
 
+    .save_btn {
+        width: 100px !important;
+        height: 45px !important;
+    }
+
+    input:valid {
+        /*border-color: deepskyblue;*/
+    }
+
+    input:invalid {
+        border-color: red;
+    }
+
+    select:invalid {
+        border-color: red;
+    }
 </style>

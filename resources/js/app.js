@@ -12,6 +12,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 // https://www.npmjs.com/package/vue-bootstrap-datetimepicker
 import datePicker from 'vue-bootstrap-datetimepicker';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
+
 Vue.use(datePicker);
 
 // routing
@@ -28,12 +29,17 @@ library.add(fab)
 library.add(faCoffee)
 Vue.component('fa', FontAwesomeIcon)
 
+Vue.use(VeeValidate, {
+    validity: true
+});
+
 Vue.use(BootstrapVue);
-Vue.use(VeeValidate);
 Vue.use(VueResource);
+Vue.use(VueRouter);
+
 Vue.config.productionTip = false;
 Vue.http.options.emulateJSON = true;
-Vue.use(VueRouter);
+
 Vue.http.options.root = 'http://localhost:8080';
 
 const router = new VueRouter({
