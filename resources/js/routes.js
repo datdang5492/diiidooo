@@ -15,7 +15,7 @@ export default [
             {path: '/', component: profile_setting},
             {path: 'photo', component: photo},
             {path: 'reviews-about-you', component: review},
-            {path: 'reviews-by-you', component: review},
+            {path: 'reviews-by-you', component: review}
         ]
     }
 ]

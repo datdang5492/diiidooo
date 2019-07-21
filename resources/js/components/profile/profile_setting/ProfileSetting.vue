@@ -234,6 +234,9 @@
                 required: 'Kindly enter your birth date!',
                 date_format: 'Date format is dd/mm/yyyy, such as 20/12/2000'
             },
+            phone: {
+                required: 'Phone number is required'
+            },
             language: {
                 required: 'Kindly choose your preferable language!',
                 numeric: 'Kindly choose your preferable language!',
@@ -261,14 +264,33 @@
             return {};
         },
         methods: {
-            saveProfile: function (event) {
-
-                this.$validator.validateAll().then((result) => {
-                    if (result) {
-                        alert('Form Submitted!');
-                        return;
-                    }
+            saveProfile: function () {
+                this.$http.post('profile/save', {
+                    firstName: 'dat',
+                    lastName: 'dat',
+                    gender: 'dat',
+                    birthDate: 'dat',
+                    phone: 'dat',
+                    governmentId: 'dat',
+                    language: 'dat',
+                    currency: 'dat',
+                    address: 'dat',
+                    introduction: 'dat',
+                }).then(function (data) {
+                    return;
                 });
+                return;
+
+                // this.$validator.validateAll().then((result) => {
+                //     if (result) {
+                //         this.$http.post('profile/save', {
+                //
+                //         }).then(function (data) {
+                //             return;
+                //         });
+                //         return;
+                //     }
+                // });
             }
         },
         created: function () {

@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <h3 class="section-title text-center m-5">Or just call (+49)157 5479 2720</h3>
+        <h3 class="section-title text-center m-5">Have a question? Don't hesitate to call us (+49)157 5479 2720</h3>
     </div>
 </template>
 

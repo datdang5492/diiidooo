@@ -180,10 +180,12 @@
                 this.$refs['signupModal'].toggle()
                 this.$refs['loginModal'].toggle()
             },
+
             toggleForgotPasswordModal: function () {
                 this.$refs['forgotPassModal'].toggle()
                 this.$refs['loginModal'].toggle()
             },
+
             handleLogin: function () {
                 this.$http.post('login', {
                     email: this.user.email,

@@ -19,6 +19,8 @@ services:
       context: ./
       dockerfile: web.dockerfile
     working_dir: /var/www
+    volumes:
+      - D:\Projects\dido/:/var/www
     volumes_from:
       - app
     ports:
@@ -36,6 +38,22 @@ services:
       - "MYSQL_ROOT_PASSWORD=password"
     ports:
       - "33061:3306"
+
+  neo4j:
+    image: neo4j:3.5.3
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_dbms_connectors_default_listen_address=0.0.0.0
+      - NEO4J_dbms_connector_http_address=0.0.0.0:7474
+    volumes_from:
+      - app
+    volumes:
+      - ../neo4j/plugins:/plugins
+      - ../neo4j/data:/data
+      - ../neo4j/import:/import
+      - ../neo4j/conf/neo4j.conf:/conf/neo4j.conf
 
 volumes:
   dbdata:
