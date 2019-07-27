@@ -21,7 +21,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control"
-                                   v-validate="'required|alpha_spaces|min:2'" name="firstName">
+                                   v-validate="'required|alpha_spaces|min:2'" name="firstName" v-model="firstName">
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control"
-                                   v-validate="'required|alpha_spaces|min:2'" name="lastName">
+                                   v-validate="'required|alpha_spaces|min:2'" name="lastName" v-model="lastName">
                         </div>
                     </div>
                 </div>
@@ -56,11 +56,11 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <select class="custom-select" v-validate="'required|numeric|max:1'" name="gender">
+                            <select class="custom-select" v-validate="'required|alpha|max:6'" name="gender" v-model="gender">
                                 <option selected>Choose a gender</option>
-                                <option value="1" selected>Male</option>
-                                <option value="2">Female</option>
-                                <option value="3">Other</option>
+                                <option value="male" selected>Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
                             </select>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control" v-validate="'required|date_format:dd/MM/yyyy'"
-                                   name="birthDate">
+                                   name="birthDate" v-model="birthDate">
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="015754792720"
-                                   v-validate="'required|numeric|max:12|min:9'" name="phone">
+                                   v-validate="'required|alpha_num|max:12|min:9'" name="phone" v-model="phone">
                         </div>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Y08CK9MGM"
-                                   v-validate="'required|alpha_num|max:9'" name="governmentId">
+                                   v-validate="'required|alpha_num|max:9'" name="governmentId" v-model="governmentId">
                         </div>
                     </div>
                 </div>
@@ -132,11 +132,11 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <select class="custom-select" v-validate="'required|numeric|max:2'" name="language">
+                            <select class="custom-select" v-validate="'required|alpha|length:2'" name="language" v-model="language">
                                 <option>Please choose a language</option>
-                                <option value="1">English</option>
-                                <option value="2" selected>German</option>
-                                <option value="3">Tiếng Việt</option>
+                                <option value="en">English</option>
+                                <option value="de" selected>German</option>
+                                <option value="vi">Tiếng Việt</option>
                             </select>
                         </div>
                     </div>
@@ -154,11 +154,11 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <select class="custom-select" v-validate="'required|numeric|max:2'" name="currency">
+                            <select class="custom-select" v-validate="'required|alpha|length:3'" name="currency" v-model="currency">
                                 <option>Please choose a currency</option>
-                                <option value="1" selected>EUR</option>
-                                <option value="2">USD</option>
-                                <option value="3">VND</option>
+                                <option value="eur" selected>EUR</option>
+                                <option value="usd">USD</option>
+                                <option value="vnd">VND</option>
                             </select>
                         </div>
                     </div>
@@ -178,7 +178,7 @@
                         <div class="input-group">
                             <input type="text" class="form-control"
                                    placeholder="House Number - Street, Postcode - City, Country"
-                                   v-validate="'required'" name="address">
+                                   v-validate="'required'" name="address" v-model="address">
                         </div>
                     </div>
                 </div>
@@ -195,7 +195,7 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <textarea class="form-control" v-validate="'required'" name="introduction">a graduate student of Hochschule Heilbronn
+                            <textarea class="form-control" v-validate="'required'" name="introduction" v-model="introduction">a graduate student of Hochschule Heilbronn
                             </textarea>
                         </div>
                     </div>
@@ -256,44 +256,48 @@
         }
     };
 
-
     export default {
         name: "profile_setting",
         components: {},
         data() {
-            return {};
+            return {
+                firstName: 'dat',
+                lastName: 'dat',
+                gender: 'male',
+                birthDate: '05/04/1992',
+                phone: '01655194700',
+                governmentId: 'ABCDEFGHU',
+                language: 'en',
+                currency: 'eur',
+                address: 'Kazbockstr.21',
+                introduction: 'some intro',
+            };
         },
         methods: {
             saveProfile: function () {
-                this.$http.post('profile/save', {
-                    firstName: 'dat',
-                    lastName: 'dat',
-                    gender: 'dat',
-                    birthDate: 'dat',
-                    phone: 'dat',
-                    governmentId: 'dat',
-                    language: 'dat',
-                    currency: 'dat',
-                    address: 'dat',
-                    introduction: 'dat',
-                }).then(function (data) {
-                    return;
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        this.$http.post('profile/save', {
+                            firstName: this.firstName,
+                            lastName: this.lastName,
+                            gender: this.gender,
+                            birthDate: this.birthDate,
+                            phone: this.phone,
+                            governmentId: this.governmentId,
+                            language: this.language,
+                            currency: this.currency,
+                            address: this.address,
+                            introduction: this.introduction,
+                        }).then(function (data) {
+                            return;
+                        });
+                        return;
+                    }
                 });
-                return;
-
-                // this.$validator.validateAll().then((result) => {
-                //     if (result) {
-                //         this.$http.post('profile/save', {
-                //
-                //         }).then(function (data) {
-                //             return;
-                //         });
-                //         return;
-                //     }
-                // });
             }
         },
         created: function () {
+            // enable custome validation message
             this.$validator.localize('en', dict);
         }
     };
