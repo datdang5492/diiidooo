@@ -1,5 +1,8 @@
 <template>
     <div class="col-md-7">
+        <div v-if="this.errorMsg">
+            <b-alert show dismissible variant="danger">{{errorMsg}}</b-alert>
+        </div>
         <form @submit.prevent="saveProfile">
             <div class="profile_detail container-fluid">
                 <div class="row mb-3 section_title">
@@ -7,7 +10,6 @@
                         <label>Required *</label>
                     </div>
                 </div>
-
 
                 <div class="row">
                     <div class="col-sm-9 offset-3">
@@ -56,7 +58,8 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <select class="custom-select" v-validate="'required|alpha|max:6'" name="gender" v-model="gender">
+                            <select class="custom-select" v-validate="'required|alpha|max:6'" name="gender"
+                                    v-model="gender">
                                 <option selected>Choose a gender</option>
                                 <option value="male" selected>Male</option>
                                 <option value="female">Female</option>
@@ -132,7 +135,8 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <select class="custom-select" v-validate="'required|alpha|length:2'" name="language" v-model="language">
+                            <select class="custom-select" v-validate="'required|alpha|length:2'" name="language"
+                                    v-model="language">
                                 <option>Please choose a language</option>
                                 <option value="en">English</option>
                                 <option value="de" selected>German</option>
@@ -154,7 +158,8 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <select class="custom-select" v-validate="'required|alpha|length:3'" name="currency" v-model="currency">
+                            <select class="custom-select" v-validate="'required|alpha|length:3'" name="currency"
+                                    v-model="currency">
                                 <option>Please choose a currency</option>
                                 <option value="eur" selected>EUR</option>
                                 <option value="usd">USD</option>
@@ -195,7 +200,8 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <textarea class="form-control" v-validate="'required'" name="introduction" v-model="introduction">a graduate student of Hochschule Heilbronn
+                            <textarea class="form-control" v-validate="'required'" name="introduction"
+                                      v-model="introduction">a graduate student of Hochschule Heilbronn
                             </textarea>
                         </div>
                     </div>
@@ -261,7 +267,7 @@
         components: {},
         data() {
             return {
-                firstName: 'dat',
+                firstName: '',
                 lastName: 'dat',
                 gender: 'male',
                 birthDate: '05/04/1992',
@@ -269,8 +275,10 @@
                 governmentId: 'ABCDEFGHU',
                 language: 'en',
                 currency: 'eur',
-                address: 'Kazbockstr.21',
+                address: '',
                 introduction: 'some intro',
+
+                errorMsg: '',
             };
         },
         methods: {
@@ -289,15 +297,19 @@
                             address: this.address,
                             introduction: this.introduction,
                         }).then(function (data) {
+                            // save successfully
                             return;
+                        }).catch(function (res) {
+                            if(!res.ok) {
+                                this.errorMsg = res.body.message;
+                            }
                         });
-                        return;
                     }
                 });
             }
         },
         created: function () {
-            // enable custome validation message
+            // enable custom validation message
             this.$validator.localize('en', dict);
         }
     };

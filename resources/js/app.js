@@ -30,7 +30,7 @@ library.add(faCoffee)
 Vue.component('fa', FontAwesomeIcon)
 
 Vue.use(VeeValidate, {
-    validity: true
+    // validity: true
 });
 
 Vue.use(BootstrapVue);

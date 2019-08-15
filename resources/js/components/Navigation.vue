@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid navigation border-bottom mb-5">
+    <div class="container-fluid navigation border-bottom">
         <nav class="navbar navbar-expand-lg navbar-dark pt-4 px-0">
             <a class="navbar-brand mr-5" href="/">
                 <img
@@ -22,6 +22,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ml-auto font-weight-normal">
+                    <li class="nav-item">
+                        <b-form-select v-model="selected_language" :options="languages" size="sm"
+                                       class="mr-5 mt-1"></b-form-select>
+                    </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="#">
                             <i class="fa fa-comment-dollar mr-2"></i>Dido transfer
@@ -37,10 +41,13 @@
                         <a class="nav-link" href="#" v-b-modal.loginModal>Log in</a>
                     </li>
                     <li class="nav-item" v-if="this.$authStatus !== '1'">
-                        <b-btn variant="outline-success" v-b-modal.signupModal>Sign up</b-btn>
+                        <b-btn variant="outline-success" v-b-modal.signupModal><i class="fa fa-user-edit mr-2"></i>Sign
+                            up
+                        </b-btn>
                     </li>
                     <li class="nav-item" v-if="this.$authStatus === '1'">
-                        <a class="nav-link" href="#" @click="handleSignOut()">Sign out</a>
+                        <a class="nav-link" href="#" @click="handleSignOut()"><i class="fa fa-times mr-2"></i>Sign
+                            out</a>
                     </li>
                 </ul>
             </div>
@@ -54,20 +61,23 @@
         components: {},
         data() {
             return {
-
+                selected_language: null,
+                languages: [
+                    {value: null, text: 'Languages'},
+                    {value: 'en', text: 'English'},
+                    {value: 'de', text: 'Deutsch'},
+                    {value: 'vi', text: 'Tiếng Việt'},
+                ]
             };
         },
         methods: {
             handleSignOut: function () {
-                this.$http.post('logout', {
-
-                }).then(function (data) {
+                this.$http.post('logout', {}).then(function (data) {
                     window.location.reload();
                 });
             },
         },
         created: function () {
-            console.log(this.$authStatus);
         }
     };
 </script>

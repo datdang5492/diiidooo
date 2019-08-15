@@ -10,7 +10,7 @@
                 <b-link href="list">
                     <b-card title="Munich - Hanoi" img-alt="Image" img-top tag="article" style="max-width: 270px"
                             class="mb-2 card-link">
-                        <b-card-text><i class="fa fa-dolly mr-2"></i>from €6 / kg</b-card-text>
+                        <b-card-text><i class="fa fa-dolly mr-2"></i>from <span class="font-weight-bold">€5</span> / kg</b-card-text>
                     </b-card>
                 </b-link>
             </div>
@@ -19,7 +19,7 @@
                 <b-link href="list">
                     <b-card title="Frankfurt - Hanoi" img-alt="Image" img-top tag="article" style="max-width: 270px"
                             class="mb-2">
-                        <b-card-text><i class="fa fa-dolly mr-2"></i>from €5 / kg</b-card-text>
+                        <b-card-text><i class="fa fa-dolly mr-2"></i>from <span class="font-weight-bold">€5</span> / kg</b-card-text>
                     </b-card>
                 </b-link>
             </div>
@@ -28,7 +28,7 @@
                 <b-link href="list">
                     <b-card title="Berlin - Hanoi" img-alt="Image" img-top tag="article" style="max-width: 270px"
                             class="mb-2">
-                        <b-card-text><i class="fa fa-dolly mr-2"></i>from €3 / kg</b-card-text>
+                        <b-card-text><i class="fa fa-dolly mr-2"></i>from <span class="font-weight-bold">€5</span> / kg</b-card-text>
                     </b-card>
                 </b-link>
             </div>
@@ -37,7 +37,7 @@
                 <b-link href="list">
                     <b-card title="Hamburg - Hanoi" img-alt="Image" img-top tag="article" style="max-width: 270px"
                             class="mb-2">
-                        <b-card-text><i class="fa fa-dolly mr-2"></i>from €7 / kg</b-card-text>
+                        <b-card-text><i class="fa fa-dolly mr-2"></i>from <span class="font-weight-bold">€5</span> / kg</b-card-text>
                     </b-card>
                 </b-link>
             </div>
@@ -48,7 +48,7 @@
                 <b-link href="list">
                     <b-card title="Munich - Tp. HCM" img-alt="Image" img-top tag="article" style="max-width: 270px"
                             class="mb-2">
-                        <b-card-text><i class="fa fa-dolly mr-2"></i>from €6 / kg</b-card-text>
+                        <b-card-text><i class="fa fa-dolly mr-2"></i>from <span class="font-weight-bold">€5</span> / kg</b-card-text>
                     </b-card>
                 </b-link>
             </div>
@@ -57,7 +57,7 @@
                 <b-link href="list">
                     <b-card title="Frankfurt - Tp. HCM" img-alt="Image" img-top tag="article" style="max-width: 270px"
                             class="mb-2">
-                        <b-card-text><i class="fa fa-dolly mr-2"></i>from €6 / kg</b-card-text>
+                        <b-card-text><i class="fa fa-dolly mr-2"></i>from <span class="font-weight-bold">€5</span> / kg</b-card-text>
                     </b-card>
                 </b-link>
             </div>
@@ -66,7 +66,7 @@
                 <b-link href="list">
                     <b-card title="Berlin - Tp. HCM" img-alt="Image" img-top tag="article" style="max-width: 270px"
                             class="mb-2">
-                        <b-card-text><i class="fa fa-dolly mr-2"></i>from €5 / kg</b-card-text>
+                        <b-card-text><i class="fa fa-dolly mr-2"></i>from <span class="font-weight-bold">€5</span> / kg</b-card-text>
                     </b-card>
                 </b-link>
             </div>
@@ -75,7 +75,7 @@
                 <b-link href="list">
                     <b-card title="Hamburg - Tp.HCM" img-alt="Image" img-top tag="article" style="max-width: 270px"
                             class="mb-2">
-                        <b-card-text><i class="fa fa-dolly mr-2"></i>from €5 / kg</b-card-text>
+                        <b-card-text><i class="fa fa-dolly mr-2"></i>from <span class="font-weight-bold">€5</span> / kg</b-card-text>
                     </b-card>
                 </b-link>
             </div>
@@ -105,5 +105,13 @@
     a {
         color: #212529;
         text-decoration: none !important;
+    }
+
+    .card-body {
+        padding: 0;
+    }
+
+    .card-title {
+        font-weight: 400;
     }
 </style>

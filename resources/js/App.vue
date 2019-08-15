@@ -21,8 +21,7 @@
             Authentication
         },
         data() {
-            return {
-            };
+            return {};
         },
         methods: {},
         created: function () {
@@ -31,6 +30,22 @@
 </script>
 
 <style>
+    body {
+        color: #484848 !important;
+    }
+
+    .mt-6 {
+        margin-top: 4.5rem !important;
+    }
+
+    .mt-7 {
+        margin-top: 6rem !important;
+    }
+
+    .mt-8 {
+        margin-top: 7.5rem !important;
+    }
+
     .min-height-1000 {
         min-height: 1000px;
     }
@@ -111,4 +126,5 @@
     select:invalid {
         border-color: red;
     }
+
 </style>

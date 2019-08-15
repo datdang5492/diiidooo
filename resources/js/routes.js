@@ -5,10 +5,12 @@ import profile from './components/profile/Profile';
 import profile_setting from './components/profile/profile_setting/ProfileSetting';
 import photo from './components/profile/media/Photo';
 import review from './components/profile/review/Review';
+import add_shipment from './components/list/AddShipment';
 
 export default [
     {path: '/', component: homepage},
     {path: '/list', component: list},
+    {path: '/add-shipment', component: add_shipment},
     {path: '/detail', component: detail},
     {
         path: '/profile', component: profile, children: [
