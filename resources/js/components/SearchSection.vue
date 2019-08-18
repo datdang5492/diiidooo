@@ -30,7 +30,7 @@
 
                             <div class="mb-auto mt-4 row">
                                 <div class="col-lg-8 offset-lg-2">
-                                    <date-picker v-model="date"></date-picker>
+                                    <date-picker v-model="date" :config="dateOptions"></date-picker>
                                 </div>
                             </div>
 
@@ -78,7 +78,8 @@
 
                     <div class="row">
                         <div class="col-lg-8 col-md-10 col-sm-12 offset-lg-2 text-center">
-                            <b-button class="btn btn-pill align-self-center" size="lg" variant="outline-primary">
+                            <b-button class="btn btn-pill align-self-center" v-b-modal.signupModal
+                                      size="lg" variant="outline-primary">
                                 <i class="fa fa-hand-point-right mr-2"></i>Join our community
                             </b-button>
                         </div>
@@ -96,7 +97,11 @@
         components: {},
         data() {
             return {
-                date: new Date()
+                date: new Date(),
+                dateOptions: {
+                    format: 'DD/MM/YYYY',
+                    useCurrent: false,
+                }
             };
         },
         methods: {},
