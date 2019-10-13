@@ -70,16 +70,7 @@
                   </span>
                     </div>
                 </div>
-                <!--  Last Name -->
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Last Name"
-                           v-model="guest.password_confirmation">
-                    <div class="input-group-append">
-                  <span class="input-group-text">
-                    <i class="far fa-user"></i>
-                  </span>
-                    </div>
-                </div>
+
                 <!-- Password -->
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" :type="'password'" placeholder="Password"
@@ -91,16 +82,6 @@
                     </div>
                 </div>
 
-                <!-- Password Confirmation-->
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" :type="'password'" placeholder="Password"
-                           v-model="guest.password_confirmation">
-                    <div class="input-group-append">
-                  <span class="input-group-text">
-                    <i class="fa fa-lock"></i>
-                  </span>
-                    </div>
-                </div>
                 <div class="custom-control custom-checkbox mb-3">
                     <input type="checkbox" class="custom-control-input" id="confirmation">
                     <label class="custom-control-label" for="confirmation">By continuing you accept our <a
@@ -200,8 +181,7 @@
                 this.$http.post('register', {
                     email: this.guest.email,
                     name: this.guest.name,
-                    password: this.guest.password,
-                    password_confirmation: this.guest.password
+                    password: this.guest.password
                 }).then(function (data) {
                     window.location.reload();
                 });

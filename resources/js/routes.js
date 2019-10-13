@@ -10,7 +10,8 @@ import add_shipment from './components/list/AddShipment';
 export default [
     {path: '/', component: homepage},
     {path: '/list', component: list},
-    {path: '/add-shipment', component: add_shipment},
+    {path: '/become-a-shipper/:stepNo', component: add_shipment},
+    {path: '/become-a-shipper/:stepNo/ad/:adId', component: add_shipment},
     {path: '/detail', component: detail},
     {
         path: '/profile', component: profile, children: [

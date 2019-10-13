@@ -24,18 +24,16 @@
                 <ul class="navbar-nav ml-auto font-weight-normal">
                     <li class="nav-item">
                         <b-form-select v-model="selected_language" :options="languages" size="sm"
-                                       class="mr-5 mt-1"></b-form-select>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">
-                            <i class="fa fa-comment-dollar mr-2"></i>Dido transfer
-                        </a>
+                                       class="mr-4 mt-1 lang_select"></b-form-select>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="#">Shipment status</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
+                    </li>
+                    <li class="nav-item" v-if="this.$authStatus === '1'">
+                        <a class="nav-link" href="/profile">My Account</a>
                     </li>
                     <li class="nav-item" v-if="this.$authStatus !== '1'">
                         <a class="nav-link" href="#" v-b-modal.loginModal>Log in</a>
@@ -96,6 +94,10 @@
 
     .navigation .navbar-collapse .nav-item a {
         color: #5A6169
+    }
+
+    .lang_select {
+        width: 82%;
     }
 
 </style>

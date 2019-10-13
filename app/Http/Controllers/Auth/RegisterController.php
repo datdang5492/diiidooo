@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Repositories\UserRepository;
 use App\User;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -30,14 +32,18 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/';
 
+    private $userRepo;
+
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param UserRepository $userRepo
      */
-    public function __construct()
+    public function __construct(UserRepository $userRepo)
     {
         $this->middleware('guest');
+        $this->userRepo = $userRepo;
+
     }
 
     /**
@@ -51,15 +57,16 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'password' => ['required', 'string', 'min:6'],
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \App\User
+     * @throws Exception
      */
     protected function create(array $data)
     {

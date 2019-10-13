@@ -2,54 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\Neo4jRepository;
+use App\Http\Repositories\UserRepository;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserProfileController extends Controller
 {
     /**
-     * @var Neo4jRepository
+     * @var UserRepository
      */
-    private $neo4jRepository;
+    private $userRepository;
 
     /**
      * Create a new controller instance.
      *
-     * @param Neo4jRepository $neo4jRepository
+     * @param UserRepository $userRepository
      */
-    public function __construct(Neo4jRepository $neo4jRepository)
+    public function __construct(UserRepository $userRepository)
     {
         $this->middleware('auth');
-        $this->neo4jRepository = $neo4jRepository;
+        $this->userRepository = $userRepository;
+    }
+
+    public function getProfile()
+    {
+        $uuid = Auth::id();
+
+        try {
+            $userData = $this->userRepository->getUserData($uuid);
+
+            return response()->json(['data' => $userData], 200);
+
+        } catch (Exception $e) {
+            return response()->json(['msg' => 'Can not save user data!'], 500);
+        }
     }
 
     public function saveProfile(Request $request)
     {
-        $this->validateProfile($request);;
+        $this->validateProfile($request);
 
-        $query = 'CREATE (:User $data);';
+        $uuid = Auth::id();
+
         $data = [
             'firstName' => $request->input('firstName'),
             'lastName' => $request->input('lastName'),
-            'gender ' => $request->input('gender'),
-            'birthDate ' => $request->input('birthDate'),
-            'phone ' => $request->input('phone'),
-            'governmentId ' => $request->input('governmentId'),
-            'language ' => $request->input('language'),
-            'currency ' => $request->input('currency'),
-            'address ' => $request->input('address'),
-            'introduction ' => $request->input('introduction')
+            'gender' => $request->input('gender'),
+            'birthDate' => $this->convertDateToStandard($request->input('birthDate')),
+            'phone' => $request->input('phone'),
+            'governmentId' => $request->input('governmentId'),
+            'language' => $request->input('language'),
+            'currency' => $request->input('currency'),
+            'address' => $request->input('address'),
+            'introduction' => $request->input('introduction')
         ];
 
         try {
-            $this->neo4jRepository->run($query, ['data' => $data]);
+            $this->userRepository->saveUserData($uuid, $data);
+            return response()->json(['msg' => 'success'], 200);
+
         } catch (Exception $e) {
             return response()->json(['msg' => 'Can not save user data!'], 500);
         }
-
-
-        return response()->json(['msg' => 'success'], 200);
     }
 
     private function validateProfile(Request $request): void
@@ -66,5 +81,11 @@ class UserProfileController extends Controller
             'address' => 'required',
             'introduction' => 'required|min:3'
         ]);
+    }
+
+    private function convertDateToStandard(string $date)
+    {
+        $date = str_replace('/', '-', $date);
+        return date("Y-m-d", strtotime($date));
     }
 }

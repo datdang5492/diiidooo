@@ -59,7 +59,7 @@
 
                     <div class="row mt-auto">
                         <div class="col-lg-10 col-md-10 col-sm-12 offset-lg-1 text-center">
-                            <b-link href="/add-shipment">
+                            <b-link href="/become-a-shipper/stepone">
                                 <b-button class="btn btn-pill align-self-center" size="lg" variant="outline-primary">
                                     <i class="fa fa-hand-point-right mr-2"></i>Add shipment
                                 </b-button>

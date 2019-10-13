@@ -10,7 +10,7 @@
         </div>
 
         <div class="container-fluid m-4">
-            <div class="row" id="add_list_step_1" v-if="steps['1']">
+            <div class="row" id="add_list_step_1" v-if="stepone != null && steps['stepone']">
                 <div class="col-lg-12">
                     <div class="row mb-3 text-center">
                         <div class="col-lg-5 offset-lg-2">
@@ -20,7 +20,7 @@
 
                     <div class="row">
                         <div class="col-lg-5 offset-lg-2">
-                            <b-form ref="stepOneForm">
+                            <b-form ref="steponeForm">
                                 <b-card bg-variant="light">
                                     <b-form-group
                                         label-cols-lg="2"
@@ -36,7 +36,7 @@
                                             label-for="flight_from"
                                         >
                                             <b-form-input id="flight_from" name="flightFrom"
-                                                          v-model="stepOne.flightFrom"
+                                                          v-model="stepone.flightFrom"
                                                           v-validate="'required|alpha_spaces'">
                                             </b-form-input>
                                             <div class="row">
@@ -52,7 +52,7 @@
                                             label-align-sm="right"
                                             label-for="flight_to"
                                         >
-                                            <b-form-input id="flight_to" name="flightTo" v-model="stepOne.flightTo"
+                                            <b-form-input id="flight_to" name="flightTo" v-model="stepone.flightTo"
                                                           v-validate="'required|alpha_spaces'">>
                                             </b-form-input>
                                             <div class="row">
@@ -69,8 +69,9 @@
                                             label-for="flight_date"
                                         >
                                             <date-picker id="flight_date" name="flightDate"
-                                                         v-model="stepOne.flightDate" :config="dateOptions"
-                                                         v-validate="'required|date_format:dd/MM/yyyy|before:expectedDeliveryDate'">
+                                                         ref="flightDate"
+                                                         v-model="stepone.flightDate" :config="dateOptions"
+                                                         v-validate="'required|date_format:dd/MM/yyyy'">
                                             </date-picker>
                                             <div class="row">
                                                 <div class="col-lg-12">
@@ -86,9 +87,8 @@
                                             label-for="expected_delivery_date"
                                         >
                                             <date-picker id="expected_delivery_date" name="expectedDeliveryDate"
-                                                         ref="expectedDeliveryDate"
-                                                         v-model="stepOne.expectedDeliveryDate" :config="dateOptions"
-                                                         v-validate="'required|date_format:dd/MM/yyyy'">
+                                                         v-model="stepone.expectedDeliveryDate" :config="dateOptions"
+                                                         v-validate="'required|date_format:dd/MM/yyyy|after:flightDate'">
                                             </date-picker>
                                             <div class="row">
                                                 <div class="col-lg-12">
@@ -107,7 +107,7 @@
                                         </b-link>
                                     </div>
                                     <div class="col-lg-7 text-center">
-                                        <b-button v-on:click="saveCurrentStep(1,2)"
+                                        <b-button v-on:click="saveCurrentStep('stepone','steptwo')"
                                                   class="btn btn-pill align-self-center" size="lg" variant="info">
                                             Next<i class="fa fa-chevron-right ml-2"></i>
                                         </b-button>
@@ -139,7 +139,7 @@
                 </div>
             </div>
 
-            <div class="row" id="add_list_step_2" v-if="steps['2']">
+            <div class="row" id="add_list_step_2" v-if="steptwo != null && steps['steptwo']">
                 <div class="col-lg-12">
                     <div class="row mb-3 text-center">
                         <div class="col-lg-5 offset-lg-2">
@@ -149,7 +149,7 @@
 
                     <div class="row">
                         <div class="col-lg-5 offset-lg-2">
-                            <b-form ref="stepTwoForm">
+                            <b-form ref="steptwoForm">
                                 <b-card bg-variant="light">
                                     <b-form-group
                                         label-cols-lg="2"
@@ -166,7 +166,7 @@
                                         >
                                             <b-input-group append="kg">
                                                 <b-form-input id="available_weight" name="availableWeight"
-                                                              v-model="stepTwo.availableWeight"
+                                                              v-model="steptwo.availableWeight"
                                                               v-validate="'required|numeric|max:3'">>
                                                 </b-form-input>
                                             </b-input-group>
@@ -189,7 +189,7 @@
                                                                class="mb-2 mr-sm-2 mb-sm-0"
                                                                :options="allowedCurrency"
                                                                id="currency"
-                                                               name="currency" v-model="stepTwo.currency"
+                                                               name="currency" v-model="steptwo.currency"
                                                                v-validate="'required|alpha|length:3'">
 
                                                     <option slot="first" :value="null">Currency</option>
@@ -209,8 +209,8 @@
                                             label-align-sm="right"
                                             label-for="price_per_kg"
                                         >
-                                            <b-input-group :append="getCurrencyName(stepTwo.currency)">
-                                                <b-form-input id="price_per_kg" name="price" v-model="stepTwo.price"
+                                            <b-input-group :append="getCurrencyName(steptwo.currency)">
+                                                <b-form-input id="price_per_kg" name="price" v-model="steptwo.price"
                                                               v-validate="'required|numeric'">
 
                                                 </b-form-input>
@@ -230,7 +230,7 @@
                                         >
                                             <b-form-radio-group
                                                 class="pt-2"
-                                                :options="['Yes', 'No']" name="homePickup" v-model="stepTwo.homePickup"
+                                                :options="['Yes', 'No']" name="homePickup" v-model="steptwo.homePickup"
                                                 v-validate="'required|alpha|max:3'">
                                             </b-form-radio-group>
                                             <div class="row">
@@ -250,7 +250,7 @@
                                                 class="pt-2"
                                                 :options="['Yes', 'No']" name="deliverDocument"
                                                 v-validate="'required|alpha|max:3'"
-                                                v-model="stepTwo.deliverDocument">
+                                                v-model="steptwo.deliverDocument">
                                             </b-form-radio-group>
                                             <div class="row">
                                                 <div class="col-lg-12">
@@ -268,7 +268,7 @@
                                         >
                                             <b-input-group append="EUR">
                                                 <b-form-input id="price_per_document" name="priceDocument"
-                                                              v-model="stepTwo.priceDocument"
+                                                              v-model="steptwo.priceDocument"
                                                               v-validate="'required|numeric'">
                                                 </b-form-input>
                                             </b-input-group>
@@ -284,12 +284,12 @@
 
                                 <div class="mb-auto mt-5 row text-center">
                                     <div class="col-lg-5 py-2">
-                                        <b-link href="#" class="back_link" v-on:click="previousStep(2,1)">
+                                        <b-link href="#" class="back_link" v-on:click="previousStep('steptwo','stepone')">
                                             <i class="fa fa-chevron-left mr-2"></i>Back
                                         </b-link>
                                     </div>
                                     <div class="col-lg-7">
-                                        <b-button v-on:click="saveCurrentStep(2,3)"
+                                        <b-button v-on:click="saveCurrentStep('steptwo','stepthree')"
                                                   class="btn btn-pill align-self-center" size="lg" variant="info">
                                             Next<i class="fa fa-chevron-right ml-2"></i>
                                         </b-button>
@@ -319,7 +319,7 @@
                 </div>
             </div>
 
-            <div class="row" id="add_list_step_3" v-if="steps['3']">
+            <div class="row" id="add_list_step_3" v-if="stepthree != null && steps['stepthree']">
                 <div class="col-lg-12">
                     <div class="row mb-3 text-center">
                         <div class="col-lg-5 offset-lg-2">
@@ -347,7 +347,7 @@
                                         >
                                             <b-input-group append="%">
                                                 <b-form-input id="discount" name="discount"
-                                                              v-model="stepThree.discount"
+                                                              v-model="stepthree.discount"
                                                               v-validate="'numeric'">
                                                 </b-form-input>
                                             </b-input-group>
@@ -363,7 +363,7 @@
                                         <b-form-group label="Do you accept deliver this kind of items ?">
                                             <b-form-checkbox-group
                                                 :options="allowedItems"
-                                                v-model="stepThree.allowedItems"
+                                                v-model="stepthree.allowedItems"
                                                 switches
                                             ></b-form-checkbox-group>
                                         </b-form-group>
@@ -378,7 +378,7 @@
                                             rows="15"
                                             max-rows="25"
                                             v-validate="'required'"
-                                            name="shipmentNote" v-model="stepThree.shipmentNote">
+                                            name="shipmentNote" v-model="stepthree.shipmentNote">
                                             >
                                         </b-form-textarea>
                                         <div class="row">
@@ -391,12 +391,12 @@
 
                                 <div class="mb-auto mt-5 row text-center">
                                     <div class="col-lg-5 py-2">
-                                        <b-link href="#" class="back_link" v-on:click="previousStep(3,2)">
+                                        <b-link href="#" class="back_link" v-on:click="previousStep('stepthree', 'steptwo')">
                                             <i class="fa fa-chevron-left mr-2"></i>Back
                                         </b-link>
                                     </div>
                                     <div class="col-lg-7">
-                                        <b-button v-on:click="nextStep(3,4)"
+                                        <b-button v-on:click="saveCurrentStep('stepthree', 'stepfour')"
                                                   class="btn btn-pill align-self-center" size="lg" variant="info">
                                             Next<i class="fa fa-chevron-right ml-2"></i>
                                         </b-button>
@@ -431,7 +431,7 @@
                 </div>
             </div>
 
-            <div class="row" id="add_list_step_4" v-if="steps['4']">
+            <div class="row" id="add_list_step_4" v-if="steps['stepfour']">
                 <div class="col-lg-12">
                     <div class="row mb-3 text-center">
                         <div class="col-lg-5 offset-lg-2">
@@ -461,7 +461,7 @@
                             </b-card>
                             <div class="mb-auto mt-5 row text-center">
                                 <div class="col-lg-5 py-2">
-                                    <b-link href="#" class="back_link" v-on:click="previousStep(4,3)">
+                                    <b-link href="#" class="back_link" v-on:click="previousStep('stepfour', 'stepthree')">
                                         <i class="fa fa-chevron-left mr-2"></i>Back
                                     </b-link>
                                 </div>
@@ -496,7 +496,7 @@
                 </div>
             </div>
 
-            <div class="row" id="add_list_step_5" v-if="steps['5']">
+            <div class="row" id="add_list_step_5" v-if="steps['stepfive']">
                 <div class="col-lg-12">
                     <div class="row mb-3 text-center">
                         <div class="col-lg-5 offset-lg-2">
@@ -511,7 +511,7 @@
                             </b-card>
                             <div class="mb-auto mt-5 row text-center">
                                 <div class="col-lg-5 py-2">
-                                    <b-link href="#" class="back_link" v-on:click="previousStep(5,4)">
+                                    <b-link href="#" class="back_link" v-on:click="previousStep('stepfive', 'stepfour')">
                                         <i class="fa fa-chevron-left mr-2"></i>Back
                                     </b-link>
                                 </div>
@@ -549,6 +549,8 @@
 
 <script>
     // custom validation message
+    import * as router from "vue-router";
+
     const dict = {
         custom: {
             flightFrom: {
@@ -597,6 +599,8 @@
                 numeric: 'Price should be number',
             },
 
+            /*TODO : ALLOWED ITEMS VALIDATION*/
+
             discount: {
                 numeric: 'Discount should be number',
             },
@@ -607,15 +611,19 @@
     };
 
     export default {
-        name: "list",
+        name: "add-shipment",
         components: {},
         data() {
             return {
+                // shipmentId: this.$route.params.id,
+                shipmentId: '',
                 date: new Date(),
                 dateOptions: {
                     format: 'DD/MM/YYYY',
                     useCurrent: false,
                 },
+
+                allowedSteps: ["stepone", "steptwo", "stepthree"],
 
                 allowedCurrency: {
                     usd: 'USD',
@@ -624,11 +632,11 @@
                 },
                 // 5 steps
                 steps: {
-                    1: true,
-                    2: false,
-                    3: false,
-                    4: false,
-                    5: false,
+                    'stepone': false,
+                    'steptwo': false,
+                    'stepthree': false,
+                    'stepfour': false,
+                    'stepfive': false,
                 },
 
                 progressValue: 20,
@@ -641,66 +649,47 @@
                     {value: 'lithium_devices', text: 'Lithium Devices'}
                 ],
 
-                stepOne: {
-                    flightFrom: 'Munich',
-                    flightTo: 'Hanoi',
-                    flightDate: '',
-                    expectedDeliveryDate: '',
-                },
-
-                stepTwo: {
-                    availableWeight: null,
-                    currency: 'eur',
-                    price: 7,
-                    homePickup: '',
-                    deliverDocument: '',
-                    priceDocument: 5
-                },
-                stepThree: {
-                    discount: 20,
-                    allowedItems: [],
-                    shipmentNote: 'some note'
-                },
+                stepone: null,
+                steptwo: null,
+                stepthree: null,
             }
         },
         methods: {
             nextStep: function (currentStep, nextStep) {
+                if (this[nextStep] === null) {
+                    this.getStepXData(nextStep, this.shipmentId);
+                }
+
                 this.steps[currentStep] = false;
                 this.steps[nextStep] = true;
                 this.progressValue += 20;
+                this.$router.push({path: `/become-a-shipper/${nextStep}/ad/${this.shipmentId}`});
             },
 
             previousStep: function (currentStep, lastStep) {
                 this.steps[currentStep] = false;
                 this.steps[lastStep] = true;
                 this.progressValue -= 20;
+                this.$router.push({path: `/become-a-shipper/${lastStep}/ad/${this.shipmentId}`});
             },
 
             saveCurrentStep: function (currentStep, nextStep) {
-                if (currentStep === 1) {
-                    let postUrl = 'shipment/add-step-one';
-                    let postData = this.stepOne;
+                const postUrl = `become-a-shipper/${currentStep}`;
+                const postData = this[currentStep];
+                if(this.shipmentId !== ''){
+                    postData.adId = this.shipmentId
                 }
 
-                if (currentStep === 2) {
-                    let postUrl = 'shipment/add-step-two';
-                    let postData = this.stepTwo;
-                }
-
-                if (currentStep === 3) {
-                    let postUrl = 'shipment/add-step-three';
-                    let postData = this.stepThree;
-                }
-
-                // stepOneForm
-                this.$validator.validateAll().then((result) => {
-                    if (result == true) {
-                        this.$http.post(postUrl, postData).then(function (data) {
-                            this.nextStep(currentStep, nextStep);
-                            return;
+                this.$validator.validateAll().then((validateResult) => {
+                    if (validateResult === true) {
+                        this.$http.post(postUrl, postData).then(function (res) {
+                            if (res.status === 200) {
+                                this.shipmentId = res.body.id;
+                                this.nextStep(currentStep, nextStep);
+                            }
                         }).catch(function (res) {
                             if (!res.ok) {
-                                this.errorMsg = res.body.message;
+                                this.errorMsg = 'Something wrong happened!'
                             }
                         });
                     }
@@ -712,12 +701,52 @@
                 if (currencyCode in this.allowedCurrency) {
                     return this.allowedCurrency.currencyCode
                 }
-                return null
-            }
+                return null;
+            },
+
+            getStepXData: function (stepNo, adId) {
+                var postParam = {};
+                if (adId !== undefined) {
+                    postParam = {adId: adId};
+                }
+
+                if(postParam !== undefined){
+                    postParam.step = stepNo;
+                }
+
+                this.$http.post(`get-shipment/${stepNo}/`, postParam).then(function (res) {
+                    if (res.status === 200) {
+                        if (res.body.id !== undefined) {
+                            this.shipmentId = res.body.id;
+                            this.$router.push({path: `/become-a-shipper/${stepNo}/ad/${this.shipmentId}`});
+                        }
+
+                        this[stepNo] = res.body.data;
+
+                    } else {
+                        this.errorMsg = res.msg;
+                    }
+                }).catch(function (res) {
+                    if (!res.ok) {
+                        this.errorMsg = 'Something wrong happened!';
+                    }
+                });
+            },
         },
         created: function () {
+            let adId = this.$route.params.adId;
+            let stepNo = this.$route.params.stepNo;     // step id is string
+
+            // toggle to display step page
+            this.steps = _.mapValues(this.steps, () => false);
+            this.steps[stepNo] = true;
+
             // enable custom validation message
             this.$validator.localize('en', dict);
+            if (this.allowedSteps.includes(stepNo)) {
+                this.getStepXData(stepNo, adId);
+            }
+
         }
     };
 </script>

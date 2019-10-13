@@ -1,9 +1,9 @@
 <template>
     <div class="col-md-7">
-        <div v-if="this.errorMsg">
-            <b-alert show dismissible variant="danger">{{errorMsg}}</b-alert>
-        </div>
-        <form @submit.prevent="saveProfile">
+        <b-alert dismissible variant="success" v-model="showInfoMsg">{{infoMsg}}</b-alert>
+        <b-alert dismissible variant="danger" v-model="showErrorMsg">{{errorMsg}}</b-alert>
+
+        <form @submit.prevent="saveProfile" v-if="userData !== null">
             <div class="profile_detail container-fluid">
                 <div class="row mb-3 section_title">
                     <div class="col-md-12">
@@ -23,7 +23,8 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control"
-                                   v-validate="'required|alpha_spaces|min:2'" name="firstName" v-model="firstName">
+                                   v-validate="'required|alpha_spaces|min:2'" name="firstName"
+                                   v-model="userData.firstName">
                         </div>
                     </div>
                 </div>
@@ -41,7 +42,8 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control"
-                                   v-validate="'required|alpha_spaces|min:2'" name="lastName" v-model="lastName">
+                                   v-validate="'required|alpha_spaces|min:2'" name="lastName"
+                                   v-model="userData.lastName">
                         </div>
                     </div>
                 </div>
@@ -59,7 +61,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <select class="custom-select" v-validate="'required|alpha|max:6'" name="gender"
-                                    v-model="gender">
+                                    v-model="userData.gender">
                                 <option selected>Choose a gender</option>
                                 <option value="male" selected>Male</option>
                                 <option value="female">Female</option>
@@ -82,7 +84,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control" v-validate="'required|date_format:dd/MM/yyyy'"
-                                   name="birthDate" v-model="birthDate">
+                                   name="birthDate" v-model="userData.birthDate">
                         </div>
                     </div>
                 </div>
@@ -100,7 +102,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="015754792720"
-                                   v-validate="'required|alpha_num|max:12|min:9'" name="phone" v-model="phone">
+                                   v-validate="'required|alpha_num|max:12|min:9'" name="phone" v-model="userData.phone">
                         </div>
                     </div>
                 </div>
@@ -118,7 +120,8 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Y08CK9MGM"
-                                   v-validate="'required|alpha_num|max:9'" name="governmentId" v-model="governmentId">
+                                   v-validate="'required|alpha_num|max:9'" name="governmentId"
+                                   v-model="userData.governmentId">
                         </div>
                     </div>
                 </div>
@@ -136,7 +139,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <select class="custom-select" v-validate="'required|alpha|length:2'" name="language"
-                                    v-model="language">
+                                    v-model="userData.language">
                                 <option>Please choose a language</option>
                                 <option value="en">English</option>
                                 <option value="de" selected>German</option>
@@ -159,7 +162,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <select class="custom-select" v-validate="'required|alpha|length:3'" name="currency"
-                                    v-model="currency">
+                                    v-model="userData.currency">
                                 <option>Please choose a currency</option>
                                 <option value="eur" selected>EUR</option>
                                 <option value="usd">USD</option>
@@ -183,7 +186,7 @@
                         <div class="input-group">
                             <input type="text" class="form-control"
                                    placeholder="House Number - Street, Postcode - City, Country"
-                                   v-validate="'required'" name="address" v-model="address">
+                                   v-validate="'required'" name="address" v-model="userData.address">
                         </div>
                     </div>
                 </div>
@@ -201,7 +204,7 @@
                     <div class="col-sm-9">
                         <div class="input-group">
                             <textarea class="form-control" v-validate="'required'" name="introduction"
-                                      v-model="introduction">a graduate student of Hochschule Heilbronn
+                                      v-model="userData.introduction">a graduate student of Hochschule Heilbronn
                             </textarea>
                         </div>
                     </div>
@@ -219,7 +222,6 @@
 </template>
 
 <script>
-
     // custom validation message
     const dict = {
         custom: {
@@ -267,50 +269,52 @@
         components: {},
         data() {
             return {
-                firstName: '',
-                lastName: 'dat',
-                gender: 'male',
-                birthDate: '05/04/1992',
-                phone: '01655194700',
-                governmentId: 'ABCDEFGHU',
-                language: 'en',
-                currency: 'eur',
-                address: '',
-                introduction: 'some intro',
-
+                userData: null,
                 errorMsg: '',
+                showErrorMsg: false,
+                infoMsg: '',
+                showInfoMsg: false,
             };
         },
+
         methods: {
             saveProfile: function () {
                 this.$validator.validateAll().then((result) => {
                     if (result) {
-                        this.$http.post('profile/save', {
-                            firstName: this.firstName,
-                            lastName: this.lastName,
-                            gender: this.gender,
-                            birthDate: this.birthDate,
-                            phone: this.phone,
-                            governmentId: this.governmentId,
-                            language: this.language,
-                            currency: this.currency,
-                            address: this.address,
-                            introduction: this.introduction,
-                        }).then(function (data) {
-                            // save successfully
-                            return;
+                        this.$http.post('profile/save', this.userData).then(function (res) {
+                            if (res.status === 200) {
+                                this.infoMsg = "Your information has been saved!";
+                                this.showInfoMsg = true;
+                            }
                         }).catch(function (res) {
-                            if(!res.ok) {
+                            if (!res.ok) {
                                 this.errorMsg = res.body.message;
+                                this.showErrorMsg = true;
                             }
                         });
                     }
                 });
+            },
+
+            getProfileData: function () {
+                this.$http.post('profile/get-profile').then(function (res) {
+                    this.userData = res.body.data;
+                    this.userData.birthDate = this.convertFrontendDate(this.userData.birthDate);
+                }).catch(function (res) {
+                    if (!res.ok) {
+                        this.errorMsg = res.body.message;
+                    }
+                });
+            },
+
+            convertFrontendDate: function (date) {
+                return this.$moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
             }
         },
         created: function () {
             // enable custom validation message
             this.$validator.localize('en', dict);
+            this.getProfileData();
         }
     };
 </script>

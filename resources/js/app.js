@@ -20,14 +20,14 @@ import VueRouter from 'vue-router';
 import Routes from './routes'
 
 // font awesome
-import {library} from '@fortawesome/fontawesome-svg-core'
-import {faCoffee} from '@fortawesome/free-solid-svg-icons'
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-import {fab} from '@fortawesome/free-brands-svg-icons'
+import {library} from '@fortawesome/fontawesome-svg-core';
+import {faCoffee} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {fab} from '@fortawesome/free-brands-svg-icons';
 
-library.add(fab)
-library.add(faCoffee)
-Vue.component('fa', FontAwesomeIcon)
+library.add(fab);
+library.add(faCoffee);
+Vue.component('fa', FontAwesomeIcon);
 
 Vue.use(VeeValidate, {
     // validity: true
@@ -41,6 +41,9 @@ Vue.config.productionTip = false;
 Vue.http.options.emulateJSON = true;
 
 Vue.http.options.root = 'http://localhost:8080';
+
+// datetime converter
+Vue.use(require('vue-moment'))
 
 const router = new VueRouter({
     mode: 'history',

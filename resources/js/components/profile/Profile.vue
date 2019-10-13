@@ -40,8 +40,11 @@
         data() {
             return {};
         },
-        methods: {},
+        methods: {
+
+        },
         created: function () {
+
         }
     };
 </script>
