@@ -17,7 +17,8 @@ Route::post('profile/get-profile', 'UserProfileController@getProfile')->middlewa
 Route::post('get-shipment/stepone', 'AdvertisementController@getStepOne')->middleware('auth');
 Route::post('get-shipment/steptwo', 'AdvertisementController@getStepX')->middleware('auth');
 Route::post('get-shipment/stepthree', 'AdvertisementController@getStepX')->middleware('auth');
-Route::post('get-shipment/publish', 'AdvertisementController@getStepX')->middleware('auth');
+Route::post('get-shipment/stepfive', 'AdvertisementController@getStepX')->middleware('auth');
+Route::post('get-shipment/publish', 'AdvertisementController@publish')->middleware('auth');
 
 // SAVE SHIPMENT
 Route::post('become-a-shipper/stepone', 'AdvertisementController@saveStepOne')->middleware('auth');        // SAVE SHIPMENT STEP 1

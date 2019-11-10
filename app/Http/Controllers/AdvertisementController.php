@@ -94,7 +94,8 @@ class AdvertisementController extends Controller
             ], 200);
 
         } catch (Exception $e) {
-            return response()->json(['msg' => 'Something wrong happened!'], 500);
+            return response()->json(['msg' => $e->getMessage()], 500);
+//            return response()->json(['msg' => 'Something wrong happened!'], 500);
         }
     }
 
@@ -112,6 +113,10 @@ class AdvertisementController extends Controller
             return $this->hydrateStepThreeData($adData);
         }
 
+        if ($stepNo === 'stepfive') {
+            return $adData;
+        }
+
         return [];
     }
 
@@ -121,7 +126,7 @@ class AdvertisementController extends Controller
             return false;
         }
 
-        if (!in_array($step, ['stepone', 'steptwo', 'stepthree'])) {
+        if (!in_array($step, ['stepone', 'steptwo', 'stepthree', 'stepfive'])) {
             return false;
         }
         return true;
@@ -286,7 +291,6 @@ class AdvertisementController extends Controller
 
     public function publish(Request $request)
     {
-        $this->validateStepThreeData($request);
         $userId = Auth::id();
         $adId = $request->input('adId');
 
@@ -295,6 +299,11 @@ class AdvertisementController extends Controller
                 // check if user has current undone advertisement
                 return response()->json(['msg' => 'Can not find advertisement!'], 500);
             }
+
+            if ($this->adRepository->isAdPublished($userId, $adId) === true) {
+                return response()->json(['msg' => 'Advertisement has already been published!'], 500);
+            }
+
             $this->adRepository->publish($userId, $adId);
 
             return response()->json(['msg' => 'success', 'id' => $adId], 200);
@@ -303,7 +312,6 @@ class AdvertisementController extends Controller
             return response()->json(['msg' => 'Something wrong happened!'], 500);
         }
     }
-
 
 
 }

@@ -10,6 +10,8 @@
         </div>
 
         <div class="container-fluid m-4">
+            <b-alert dismissible variant="danger" v-model="showErrorMsg">{{errorMsg}}</b-alert>
+
             <div class="row" id="add_list_step_1" v-if="stepone != null && steps['stepone']">
                 <div class="col-lg-12">
                     <div class="row mb-3 text-center">
@@ -284,7 +286,8 @@
 
                                 <div class="mb-auto mt-5 row text-center">
                                     <div class="col-lg-5 py-2">
-                                        <b-link href="#" class="back_link" v-on:click="previousStep('steptwo','stepone')">
+                                        <b-link href="#" class="back_link"
+                                                v-on:click="previousStep('steptwo','stepone')">
                                             <i class="fa fa-chevron-left mr-2"></i>Back
                                         </b-link>
                                     </div>
@@ -391,7 +394,8 @@
 
                                 <div class="mb-auto mt-5 row text-center">
                                     <div class="col-lg-5 py-2">
-                                        <b-link href="#" class="back_link" v-on:click="previousStep('stepthree', 'steptwo')">
+                                        <b-link href="#" class="back_link"
+                                                v-on:click="previousStep('stepthree', 'steptwo')">
                                             <i class="fa fa-chevron-left mr-2"></i>Back
                                         </b-link>
                                     </div>
@@ -442,9 +446,6 @@
                     <div class="row">
                         <div class="col-lg-5 offset-lg-2">
                             <b-card bg-variant="light">
-                                <h3>Valuables</h3>
-                                We recommend that you do not pack valuable items in checked baggage.
-
                                 <h3>What Not To Pack In Checked Baggage</h3>
                                 We recommend that all portable electronic devices are placed in your carry-on baggage,
                                 but if you need to place them in your checked baggage, you must make sure that they are
@@ -461,12 +462,13 @@
                             </b-card>
                             <div class="mb-auto mt-5 row text-center">
                                 <div class="col-lg-5 py-2">
-                                    <b-link href="#" class="back_link" v-on:click="previousStep('stepfour', 'stepthree')">
+                                    <b-link href="#" class="back_link"
+                                            v-on:click="previousStep('stepfour', 'stepthree')">
                                         <i class="fa fa-chevron-left mr-2"></i>Back
                                     </b-link>
                                 </div>
                                 <div class="col-lg-7">
-                                    <b-button v-on:click="nextStep(4,5)"
+                                    <b-button v-on:click="nextStep('stepfour', 'stepfive')"
                                               class="btn btn-pill align-self-center" size="lg" variant="info">
                                         Next<i class="fa fa-chevron-right ml-2"></i>
                                     </b-button>
@@ -511,12 +513,13 @@
                             </b-card>
                             <div class="mb-auto mt-5 row text-center">
                                 <div class="col-lg-5 py-2">
-                                    <b-link href="#" class="back_link" v-on:click="previousStep('stepfive', 'stepfour')">
+                                    <b-link href="#" class="back_link"
+                                            v-on:click="previousStep('stepfive', 'stepfour')">
                                         <i class="fa fa-chevron-left mr-2"></i>Back
                                     </b-link>
                                 </div>
                                 <div class="col-lg-7">
-                                    <b-button
+                                    <b-button  v-on:click="publish()"
                                         class="btn btn-pill align-self-center" size="lg" variant="info">
                                         Publish shipment<i class="fa fa-chevron-right ml-2"></i>
                                     </b-button>
@@ -623,7 +626,7 @@
                     useCurrent: false,
                 },
 
-                allowedSteps: ["stepone", "steptwo", "stepthree"],
+                allowedSteps: ["stepone", "steptwo", "stepthree", "stepfive"],
 
                 allowedCurrency: {
                     usd: 'USD',
@@ -652,12 +655,17 @@
                 stepone: null,
                 steptwo: null,
                 stepthree: null,
+                shipmentData: null,
+                errorMsg: '',
+                showErrorMsg: false,
             }
         },
         methods: {
             nextStep: function (currentStep, nextStep) {
-                if (this[nextStep] === null) {
-                    this.getStepXData(nextStep, this.shipmentId);
+                if (nextStep !== 'stepfour' || nextStep !== 'stepfive') {
+                    if (this.stepone === null || this.steptwo === null || this.stepthree === null) {
+                        this.getStepXData(nextStep, this.shipmentId);
+                    }
                 }
 
                 this.steps[currentStep] = false;
@@ -676,7 +684,7 @@
             saveCurrentStep: function (currentStep, nextStep) {
                 const postUrl = `become-a-shipper/${currentStep}`;
                 const postData = this[currentStep];
-                if(this.shipmentId !== ''){
+                if (this.shipmentId !== '') {
                     postData.adId = this.shipmentId
                 }
 
@@ -710,21 +718,43 @@
                     postParam = {adId: adId};
                 }
 
-                if(postParam !== undefined){
+                if (postParam !== undefined) {
                     postParam.step = stepNo;
                 }
 
-                this.$http.post(`get-shipment/${stepNo}/`, postParam).then(function (res) {
-                    if (res.status === 200) {
-                        if (res.body.id !== undefined) {
-                            this.shipmentId = res.body.id;
-                            this.$router.push({path: `/become-a-shipper/${stepNo}/ad/${this.shipmentId}`});
+                if (stepNo === 'stepfive') {
+                    this.getFinalStep();
+                } else {
+                    this.$http.post(`get-shipment/${stepNo}/`, postParam).then(function (res) {
+                        if (res.status === 200) {
+                            if (res.body.id !== undefined) {
+                                this.shipmentId = res.body.id;
+                                this.$router.push({path: `/become-a-shipper/${stepNo}/ad/${this.shipmentId}`});
+                            }
+                            this[stepNo] = res.body.data;
+                        } else {
+                            this.errorMsg = res.body.msg;
                         }
+                    }).catch(function (res) {
+                        if (!res.ok) {
+                            this.errorMsg = 'Something wrong happened!';
+                        }
+                    });
+                }
 
-                        this[stepNo] = res.body.data;
+            },
 
+            getFinalStep: function () {
+                var postParam = {
+                    adId: this.shipmentId,
+                    step: 'stepfive'
+                };
+
+                this.$http.post(`get-shipment/stepfive/`, postParam).then(function (res) {
+                    if (res.status === 200) {
+                        this.shipmentData = res.body.data;
                     } else {
-                        this.errorMsg = res.msg;
+                        this.errorMsg = res.body.msg;
                     }
                 }).catch(function (res) {
                     if (!res.ok) {
@@ -732,9 +762,24 @@
                     }
                 });
             },
+
+            publish: function () {
+                var postParam = {adId: this.shipmentId};
+
+                this.$http.post(`get-shipment/publish/`, postParam).then(function (res) {
+                    if (res.status === 200) {
+                        this.shipmentData = res.body.data;
+                    }
+                }).catch(function (res) {
+                    if (!res.ok) {
+                        this.showErrorMsg = true;
+                        this.errorMsg = res.body.msg;
+                    }
+                });
+            },
         },
         created: function () {
-            let adId = this.$route.params.adId;
+            this.shipmentId = this.$route.params.adId;
             let stepNo = this.$route.params.stepNo;     // step id is string
 
             // toggle to display step page
@@ -744,7 +789,7 @@
             // enable custom validation message
             this.$validator.localize('en', dict);
             if (this.allowedSteps.includes(stepNo)) {
-                this.getStepXData(stepNo, adId);
+                this.getStepXData(stepNo, this.shipmentId);
             }
 
         }

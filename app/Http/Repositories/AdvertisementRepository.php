@@ -221,7 +221,7 @@ class AdvertisementRepository
                 ad.homePickup           = $homePickup, 
                 ad.deliverDocument      = $deliverDocument,
                 ad.priceDocument        = $priceDocument
-            RETURN ad.uuid as adId';
+            RETURN ad.uuid as adId;';
 
             $result = $this->neo4jClient->run($query, [
                 'userId' => $userId,
@@ -250,7 +250,7 @@ class AdvertisementRepository
             SET ad.discount      = toFloat($discount), 
                 ad.shipmentNote  = $shipmentNote,
                 ad.allowedItems  = $allowedItems
-            RETURN ad.uuid as adId';
+            RETURN ad.uuid as adId;';
 
             $result = $this->neo4jClient->run($query, [
                 'userId' => $userId,
@@ -269,19 +269,51 @@ class AdvertisementRepository
         }
     }
 
-    public function publish(string $userId, array $data): bool
+    /**
+     * Set advertisement status to true
+     * @param string $userId
+     * @param string $uuid
+     * @return bool
+     */
+    public function publish(string $userId, string $uuid): bool
     {
         try {
-            $query = 'MATCH (u:User{uuid: $userId})-[:POST]-(ad:Advertisement{uuid: $adId}) 
+            $query = 'MATCH (u:User{uuid: $userId})-[:POST]-(ad:Advertisement{uuid: $adId})
             SET ad.status = true
-            RETURN ad.uuid as adId';
+            RETURN ad.uuid as adId;';
 
             $adId = $this->neo4jClient->run($query, [
                 'userId' => $userId,
-                'adId' => $data['uuid']
+                'adId' => $uuid
             ])->firstRecord()->get('adId');
 
             if (!empty($adId)) {
+                return true;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Check if advertisement already been published
+     * @param string $userId
+     * @param string $uuid
+     * @return bool
+     */
+    public function isAdPublished(string $userId, string $uuid): bool
+    {
+        try {
+            $query = 'MATCH (u:User{uuid: $userId})-[:POST]-(ad:Advertisement{uuid: $adId})
+            RETURN ad.status as status;';
+
+            $status = $this->neo4jClient->run($query, [
+                'userId' => $userId,
+                'adId' => $uuid
+            ])->firstRecord()->get('status');
+            
+            if (!empty($status)) {
                 return true;
             }
             return false;
