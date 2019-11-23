@@ -27,109 +27,186 @@ class AdvertisementController extends Controller
         $this->strHelper = $strHelper;
     }
 
-    public function getStepOne(Request $request)
+    /**
+     * TWO CASES WHEN GET SHIPMENT
+     * 1: get shipment with id
+     * 2: get shipment without id
+     * return unfinished shipment
+     * return new initialized shipment
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getStepOne()
     {
         try {
             $userId = Auth::id();
-            $adId = $request->input('adId');
+            $adData = $this->adRepository->getUnfinishedAdData($userId);
 
-            // get step one data with ID
-            if (!empty($adId)) {
-                $stepOneData = $this->adRepository->getStepOneDataWithId($userId, $adId);
-                if (!empty($stepOneData)) {
-                    return response()->json([
-                        'data' => $stepOneData['data'],
-                        'id' => $stepOneData['adId']
-                    ], 200);
-                }
-                return response()->json('Page not found!', 400);
+            if (empty($adData)) {
+                $adData = $this->generateShipmentData();
+                $adId = $this->strHelper->uuid()->toString();
+                $this->adRepository->createAd($userId, $adId);
+            } else {
+                $adId = $adData['adId'];
             }
 
-            // get step one data without ID
-            $stepOneData = $this->adRepository->getStepOneDataWithoutId($userId);
-            if (empty($stepOneData)) {
-                return response()->json(['data' => $this->initializeEmptyStepOne()], 200);
-            }
+            $adData = !empty($adData) ? $adData : $this->generateShipmentData();
 
             return response()->json([
-                'data' => $stepOneData['data'],
-                'id' => $stepOneData['adId']
+                'id' => $adId,
+                'data' => $this->hydrateAdData($adData)
             ], 200);
 
         } catch (Exception $e) {
-            return response()->json(['msg' => 'Something wrong happened!'], 500);
+            return response()->json(['message' => 'Something wrong happened!'], 500);
         }
     }
 
-    private function initializeEmptyStepOne(): array
-    {
-        return [
-            'flightFrom' => '',
-            'flightTo' => '',
-            'flightDate' => '',
-            'expectedDeliveryDate' => ''
-        ];
-    }
-
-    public function getStepX(Request $request)
+    public function getShipment(Request $request)
     {
         try {
             $adId = $request->input('adId');
-            $stepNo = $request->input('step');
             $userId = Auth::id();
 
-            if (empty($adId) || !$this->isStepNoValid($stepNo)) {
-                return response()->json(['msg' => 'Can not find advertisement!'], 500);
+            // get shipment without id
+            if (empty($adId)) {
+                return response()->json(['message' => 'Can not find advertisement!'], 500);
             }
 
             $adData = $this->adRepository->getAdData($userId, $adId);
 
             if (empty($adData['adId'])) {
-                return response()->json(['msg' => 'Can not find your advertisement!'], 500);
+                return response()->json(['message' => 'Can not find your advertisement!'], 500);
             }
 
             return response()->json([
                 'id' => $adData['adId'],
-                'data' => $this->hydrateAdDataByStepNo($adData, $stepNo)
+                'data' => $this->hydrateAdData($adData)
             ], 200);
 
         } catch (Exception $e) {
-            return response()->json(['msg' => $e->getMessage()], 500);
-//            return response()->json(['msg' => 'Something wrong happened!'], 500);
+            return response()->json(['message' => $e->getMessage()], 500);
+//            return response()->json(['message' => 'Something wrong happened!'], 500);
         }
     }
 
-    private function hydrateAdDataByStepNo(array $adData, string $stepNo): array
+    public function saveStepOne(Request $request)
     {
-        if ($stepNo === 'stepone') {
-            return $this->hydrateStepOneData($adData);
+        $this->validateStepOneData($request);
+        $userId = Auth::id();
+        $adId = $request->input('adId');
+        if (empty($adId)) {
+            return response()->json(['message' => 'Can not find shipment to save!'], 500);
         }
 
-        if ($stepNo === 'steptwo') {
-            return $this->hydrateStepTwoData($adData);
-        }
+        try {
+            $adData = [
+                'flightFrom' => $request->input('flightFrom'),
+                'flightTo' => $request->input('flightTo'),
+                'flightDate' => $this->convertDateToStandard($request->input('flightDate')),
+                'expectedDeliveryDate' => $this->convertDateToStandard($request->input('expectedDeliveryDate'))
+            ];
 
-        if ($stepNo === 'stepthree') {
-            return $this->hydrateStepThreeData($adData);
-        }
+            $result = $this->adRepository->saveStepOne($userId, $adId, $adData);
 
-        if ($stepNo === 'stepfive') {
-            return $adData;
-        }
+            if ($result === false) {
+                return response()->json(['message' => 'Something wrong happened!'], 500);
+            }
+            return response()->json(['message' => 'success'], 200);
 
-        return [];
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Something wrong happened!'], 500);
+        }
     }
 
-    private function isStepNoValid(?string $step): bool
+    public function saveStepTwo(Request $request)
     {
-        if (empty($step)) {
-            return false;
+        $this->validateStepTwoData($request);
+        $userId = Auth::id();
+        $adId = $request->input('adId');
+        if (empty($adId)) {
+            return response()->json(['message' => 'Can not find shipment to save!'], 500);
         }
 
-        if (!in_array($step, ['stepone', 'steptwo', 'stepthree', 'stepfive'])) {
-            return false;
+        try {
+            $adData = [
+                'availableWeight' => $request->input('availableWeight'),
+                'currency' => $request->input('currency'),
+                'price' => $request->input('price'),
+                'homePickup' => $request->input('homePickup'),
+                'deliverDocument' => $request->input('deliverDocument'),
+                'priceDocument' => $request->input('priceDocument')
+            ];
+
+            $result = $this->adRepository->saveStepTwo($userId, $adId, $adData);
+            if ($result === false) {
+                return response()->json(['message' => 'Something wrong happened!'], 500);
+            }
+            return response()->json(['message' => 'success'], 200);
+
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Something wrong happened!'], 500);
         }
-        return true;
+    }
+
+    public function saveStepThree(Request $request)
+    {
+        $this->validateStepThreeData($request);
+        $userId = Auth::id();
+        $adId = $request->input('adId');
+        if (empty($adId)) {
+            return response()->json(['message' => 'Can not find shipment to save!'], 500);
+        }
+
+        try {
+            $adData = [
+                'discount' => $request->input('discount'),
+                'shipmentNote' => $request->input('shipmentNote'),
+                'allowedItems' => json_encode($request->input('allowedItems'))
+            ];
+
+            $result = $this->adRepository->saveStepThree($userId, $adId, $adData);
+
+            if ($result === false) {
+                return response()->json(['message' => 'Something wrong happened!'], 500);
+            }
+            return response()->json(['message' => 'success'], 200);
+
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Something wrong happened!'], 500);
+        }
+    }
+
+    public function publish(Request $request)
+    {
+        $this->validateAll($request);
+        $userId = Auth::id();
+        $adId = $request->input('adId');
+        if (empty($adId)) {
+            return response()->json(['message' => 'Can not find shipment to save!'], 500);
+        }
+
+        try {
+            if ($this->adRepository->isAdPublished($userId, $adId) === true) {
+                return response()->json(['message' => 'Advertisement has already been published!'], 500);
+            }
+
+            $this->adRepository->publish($userId, $adId);
+
+            return response()->json(['message' => 'success', 'id' => $adId], 200);
+
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Something wrong happened!'], 500);
+        }
+    }
+
+
+    private function hydrateAdData(array $adData): array
+    {
+        return [
+            'step_1' => $this->hydrateStepOneData($adData),
+            'step_2' => $this->hydrateStepTwoData($adData),
+            'step_3' => $this->hydrateStepThreeData($adData)
+        ];
     }
 
     private function hydrateStepOneData(array $adData): array
@@ -163,41 +240,6 @@ class AdvertisementController extends Controller
         ];
     }
 
-    public function saveStepOne(Request $request)
-    {
-        $this->validateStepOneData($request);
-        $userId = Auth::id();
-        $adId = $request->input('adId');
-
-        try {
-            $adData = [
-                'flightFrom' => $request->input('flightFrom'),
-                'flightTo' => $request->input('flightTo'),
-                'flightDate' => $this->convertDateToStandard($request->input('flightDate')),
-                'expectedDeliveryDate' => $this->convertDateToStandard($request->input('expectedDeliveryDate'))
-            ];
-
-            if (empty($adId)) {
-                // check if user has current undone advertisement
-                if ($this->adRepository->doesUserHasUndoneAd($userId) === true) {
-                    return response()->json(['msg' => 'Something wrong happened!'], 500);
-                }
-
-                // generate new ad id to create new ad
-                $adData['uuid'] = $this->strHelper->uuid()->toString();
-                $this->adRepository->createAd($userId, $adData);
-                return response()->json(['msg' => 'success', 'id' => $adData['uuid']], 200);
-            }
-
-            $adData['uuid'] = $adId;
-            $this->adRepository->saveStepOne($userId, $adData);
-            return response()->json(['msg' => 'success', 'id' => $adId], 200);
-
-        } catch (Exception $e) {
-            return response()->json(['msg' => 'Something wrong happened!'], 500);
-        }
-    }
-
     private function convertDateToStandard(string $date)
     {
         $date = str_replace('/', '-', $date);
@@ -214,35 +256,6 @@ class AdvertisementController extends Controller
         ]);
     }
 
-    public function saveStepTwo(Request $request)
-    {
-        $this->validateStepTwoData($request);
-        $userId = Auth::id();
-        $adId = $request->input('adId');
-
-        try {
-            if (empty($adId)) {
-                // check if user has current undone advertisement
-                return response()->json(['msg' => 'Can not find advertisement!'], 500);
-            }
-
-            $adData = [
-                'availableWeight' => $request->input('availableWeight'),
-                'currency' => $request->input('currency'),
-                'price' => $request->input('price'),
-                'homePickup' => $request->input('homePickup'),
-                'deliverDocument' => $request->input('deliverDocument'),
-                'priceDocument' => $request->input('priceDocument')
-            ];
-
-            $this->adRepository->saveStepTwo($userId, $adId, $adData);
-            return response()->json(['msg' => 'success', 'id' => $adId], 200);
-
-        } catch (Exception $e) {
-            return response()->json(['msg' => 'Something wrong happened!'], 500);
-        }
-    }
-
     private function validateStepTwoData(Request $request): void
     {
         $this->validate($request, [
@@ -255,32 +268,6 @@ class AdvertisementController extends Controller
         ]);
     }
 
-    public function saveStepThree(Request $request)
-    {
-        $this->validateStepThreeData($request);
-        $userId = Auth::id();
-        $adId = $request->input('adId');
-
-        try {
-            if (empty($adId)) {
-                // check if user has current undone advertisement
-                return response()->json(['msg' => 'Can not find advertisement!'], 500);
-            }
-
-            $adData = [
-                'discount' => $request->input('discount'),
-                'shipmentNote' => $request->input('shipmentNote'),
-                'allowedItems' => json_encode($request->input('allowedItems'))
-            ];
-
-            $this->adRepository->saveStepThree($userId, $adId, $adData);
-            return response()->json(['msg' => 'success', 'id' => $adId], 200);
-
-        } catch (Exception $e) {
-            return response()->json(['msg' => 'Something wrong happened!'], 500);
-        }
-    }
-
     private function validateStepThreeData(Request $request): void
     {
         $this->validate($request, [
@@ -289,29 +276,45 @@ class AdvertisementController extends Controller
         ]);
     }
 
-    public function publish(Request $request)
+    private function validateAll(Request $request): void
     {
-        $userId = Auth::id();
-        $adId = $request->input('adId');
+        $this->validate($request, [
+            'flightFrom' => 'required|alpha|min:2',
+            'flightTo' => 'required|alpha|min:2',
+            'flightDate' => 'required|date_format:d/m/Y',
+            'expectedDeliveryDate' => 'required|date_format:d/m/Y|after_or_equal:flightDate',
 
-        try {
-            if (empty($adId)) {
-                // check if user has current undone advertisement
-                return response()->json(['msg' => 'Can not find advertisement!'], 500);
-            }
+            'availableWeight' => 'required|numeric|max:200',
+            'currency' => 'required|alpha|size:3',
+            'price' => 'required|numeric',
+            'homePickup' => 'required|alpha|max:3',
+            'deliverDocument' => 'required|alpha|max:3',
+            'priceDocument' => 'numeric',
 
-            if ($this->adRepository->isAdPublished($userId, $adId) === true) {
-                return response()->json(['msg' => 'Advertisement has already been published!'], 500);
-            }
-
-            $this->adRepository->publish($userId, $adId);
-
-            return response()->json(['msg' => 'success', 'id' => $adId], 200);
-
-        } catch (Exception $e) {
-            return response()->json(['msg' => 'Something wrong happened!'], 500);
-        }
+            'discount' => 'numeric',
+            'shipmentNote' => 'required',
+        ]);
     }
 
+    private function generateShipmentData(): array
+    {
+        return [
+            'flightFrom' => '',
+            'flightTo' => '',
+            'flightDate' => '',
+            'expectedDeliveryDate' => '',
+
+            'availableWeight' => '',
+            'currency' => '',
+            'price' => '',
+            'homePickup' => '',
+            'deliverDocument' => '',
+            'priceDocument' => '',
+
+            'discount' => '',
+            'allowedItems' => '',
+            'shipmentNote' => '',
+        ];
+    }
 
 }

@@ -52,7 +52,7 @@
                             <div class="col-lg-12">
                                 <img
                                     class="mt-auto mb-auto my-5"
-                                    src="images/student_deliver.jpg"
+                                    src="images/2.png"
                                 >
                             </div>
                         </div>

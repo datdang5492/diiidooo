@@ -8,7 +8,7 @@
                             <div class="col-lg-12">
                                 <img
                                     class="mt-auto mb-auto my-5"
-                                    src="images/man_suitcase_1.jpg"
+                                    src="images/1.png"
                                 >
                             </div>
                         </div>
