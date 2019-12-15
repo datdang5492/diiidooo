@@ -271,7 +271,7 @@ class AdvertisementController extends Controller
     private function validateStepThreeData(Request $request): void
     {
         $this->validate($request, [
-            'discount' => 'numeric',
+            'discount' => 'nullable|numeric',
             'shipmentNote' => 'required',
         ]);
     }

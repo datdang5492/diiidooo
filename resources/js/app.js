@@ -4,12 +4,14 @@ import Vue from 'vue';
 import App from './App.vue';
 import VueResource from 'vue-resource';
 import VeeValidate from 'vee-validate';
+
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // vue bootstrap datepicker
 // https://www.npmjs.com/package/vue-bootstrap-datetimepicker
+// http://eonasdan.github.io/bootstrap-datetimepicker/Options/#inline
 import datePicker from 'vue-bootstrap-datetimepicker';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 

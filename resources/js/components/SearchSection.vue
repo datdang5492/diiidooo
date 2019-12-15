@@ -100,7 +100,7 @@
                 date: new Date(),
                 dateOptions: {
                     format: 'DD/MM/YYYY',
-                    useCurrent: false,
+                    useCurrent: false
                 }
             };
         },
