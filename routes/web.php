@@ -22,3 +22,7 @@ Route::post('become-a-shipper/save/0', 'AdvertisementController@saveStepOne')->m
 Route::post('become-a-shipper/save/1', 'AdvertisementController@saveStepTwo')->middleware('auth');      // SAVE SHIPMENT STEP 2
 Route::post('become-a-shipper/save/2', 'AdvertisementController@saveStepThree')->middleware('auth');    // SAVE SHIPMENT STEP 3
 Route::post('become-a-shipper/publish', 'AdvertisementController@publish')->middleware('auth');         // PUBLISH SHIPMENT
+
+
+// FILTER SHIPMENT
+Route::post('shipment/filter', 'Shipment\FilterController@filter');

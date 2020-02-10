@@ -282,4 +282,69 @@ class AdvertisementRepository
         }
     }
 
+    public function filterShipment(array $params): array
+    {
+        $result = [];
+        $conditionStatement = '';
+
+        $query = 'MATCH (city:City{code:$fromCity})-[:FROM]-(ad:Advertisement)
+            -[:TO]-(city2:City{code:$toCity}) 
+            MATCH (u:User)-[:POST]->(ad)
+            WHERE ad.status = TRUE';
+
+        $returnStatement = ' RETURN {
+//                flightFrom : ad.flightFrom,
+//                flightTo : ad.flightTo,
+                flightDate : toString(ad.flightDate),
+                expectedDeliveryDate : toString(ad.expectedDeliveryDate),
+                
+                availableWeight: toFloat(ad.availableWeight),
+                currency: ad.currency,
+                price: ad.price,
+//                homePickup: ad.homePickup,
+//                deliverDocument: ad.deliverDocument,
+//                priceDocument: ad.priceDocument,
+                 
+//                discount: ad.discount,
+//                allowedItems: ad.allowedItems,
+//                shipmentNote: ad.shipmentNote,
+                
+                adId : ad.uuid,
+                last_name: u.lastName,
+                first_name: u.firstName,
+                is_verified: u.is_verified,
+                rating: u.rating,
+                reviews: COUNT(u.reviews),
+                profile_pic: u.profile_pic
+            } as data';
+
+
+        if (!empty($params['minPrice'])) {
+            $conditionStatement .= ' AND toFloat($minPrice) <= ad.price ';
+        }
+
+        if (!empty($params['maxPrice'])) {
+            $conditionStatement .= ' AND ad.price <= toFloat($maxPrice) ';
+        }
+
+        if (!empty($params['deliverDocument']) && $params['deliverDocument'] === true) {
+            $conditionStatement .= ' AND ad.deliverDocument = true ';
+        }
+
+        if (!empty($params['date'])) {
+            $conditionStatement .= ' AND ad.expectedDeliveryDate >= date($date) ';
+        }
+
+        $query .= $conditionStatement . $returnStatement;
+        $records = $this->neo4jClient->run($query, $params)->records();
+
+        foreach($records as $key => $record){
+            $result[] = $record->get('data');
+            $result[$key]['flightDate'] = $this->convertFrontendDate($result[$key]['flightDate']);
+            $result[$key]['expectedDeliveryDate'] = $this->convertFrontendDate($result[$key]['flightDate']);
+        }
+
+        return $result;
+    }
+
 }

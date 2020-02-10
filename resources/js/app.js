@@ -12,6 +12,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 // vue bootstrap datepicker
 // https://www.npmjs.com/package/vue-bootstrap-datetimepicker
 // http://eonasdan.github.io/bootstrap-datetimepicker/Options/#inline
+// https://github.com/ankurk91/vue-bootstrap-datetimepicker
 import datePicker from 'vue-bootstrap-datetimepicker';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
@@ -45,7 +46,7 @@ Vue.http.options.emulateJSON = true;
 Vue.http.options.root = 'http://localhost:8080';
 
 // datetime converter
-Vue.use(require('vue-moment'))
+Vue.use(require('vue-moment'));
 
 const router = new VueRouter({
     mode: 'history',

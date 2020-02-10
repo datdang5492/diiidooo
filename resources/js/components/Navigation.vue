@@ -3,7 +3,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark pt-4 px-0">
             <a class="navbar-brand mr-5" href="/">
                 <img
-                    src="images/dido_logo.png"
+                    :src="'/images/dido_logo.png'"
                     class="mr-2"
                     style="width: 80px;"
                     alt="Deliver is easy !"
