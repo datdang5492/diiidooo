@@ -1,14 +1,18 @@
 <template>
     <div class="section listing min-height-1000">
         <h3 class="section-title text-center m-5">
-            Munich <span><i class="fas fa-plane-departure"></i></span> Hanoi, 19.03.2019
+            Munich <span><i class="fas fa-plane-departure"></i></span> Hanoi,
+            {{this.$moment(filter.expected_delivery_date, 'YYYY-MM-DD').format('DD.MM.YYYY')}}
         </h3>
         <div class="container text-center">
-            <b-dropdown id="datetimeDropdown" text="Sort" class="m-md-2" pill variant="outline-secondary">
-                <b-dropdown-item v-on:click="sortShipment(0)">Price (low - high)</b-dropdown-item>
-                <b-dropdown-item v-on:click="sortShipment(1)">Price (high - low)</b-dropdown-item>
-                <b-dropdown-item v-on:click="sortShipment(2)">Available Weight (high - low)</b-dropdown-item>
-                <b-dropdown-item v-on:click="sortShipment(3)">Available Weight (low - high)</b-dropdown-item>
+            <b-dropdown v-on:click="sortShipment(0)" id="datetimeDropdown" text="Sort" class="m-md-2" pill
+                        variant="outline-secondary">
+                <b-dropdown-item v-for="option of sortOptions"
+                                 v-bind:key="option.key"
+                                 v-on:click="sortShipment(option.key)"
+                                 :active="option.key === activeSort">
+                    {{option.value}}
+                </b-dropdown-item>
             </b-dropdown>
 
             <b-button v-b-toggle.expectedDeliveryDate variant="outline-secondary">
@@ -73,7 +77,8 @@
             </b-collapse>
         </div>
         <div class="container py-5">
-            <list-item v-for="(shipmentChunk, index) in shipmentChunks" v-bind:key="index" :shipmentChunk="shipmentChunk">
+            <list-item v-for="(shipmentChunk, index) in shipmentChunks" v-bind:key="index"
+                       :shipmentChunk="shipmentChunk">
             </list-item>
         </div>
     </div>
@@ -107,6 +112,25 @@
                     useCurrent: false,
                     inline: true
                 },
+                sortOptions: [
+                    {
+                        key: 0,
+                        value: "Price (low - high)"
+                    },
+                    {
+                        key: 1,
+                        value: "Price (high - low)"
+                    },
+                    {
+                        key: 2,
+                        value: "Weight (low - high)"
+                    },
+                    {
+                        key: 3,
+                        value: "Weight (high - low)"
+                    }
+                ],
+                activeSort: null,
                 sort: null,
                 filter: {
                     expected_delivery_date: new Date(),
@@ -137,7 +161,8 @@
                 });
             },
             sortShipment: function (sortOrder) {
-                // reset all sorting order to false before set new value
+                this.activeSort = sortOrder;
+                // todo: hightlight sort option when selecting
                 this.sort = sortOrder;
                 this.filterShipment();
             },
@@ -157,6 +182,16 @@
             },
 
             filterShipment: function () {
+                let loader = this.$loading.show({
+                    // Optional parameters
+                    container: this.fullPage ? null : this.$refs.formContainer,
+                });
+                // // simulate AJAX
+                // setTimeout(() => {
+                //
+                // },5000)
+
+                // todo: improve filter performance
                 let postParam = {
                     fromCity: this.fromCity,
                     toCity: this.toCity
@@ -188,10 +223,12 @@
                     } else {
                         this.errorMsg = res.body.message;
                     }
+                    loader.hide();
                 }).catch(function (res) {
                     if (!res.ok) {
                         this.showErrorMessage('Something wrong happened!');
                     }
+                    loader.hide();
                 });
             },
 
@@ -208,7 +245,6 @@
 
             // enable custom validation message
             this.$validator.localize('en', dict);
-
             this.filterShipment();
         }
     };

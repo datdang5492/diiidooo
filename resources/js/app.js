@@ -18,6 +18,11 @@ import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
 Vue.use(datePicker);
 
+//https://www.npmjs.com/package/vue-loading-overlay
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+Vue.use(Loading);
+
 // routing
 import VueRouter from 'vue-router';
 import Routes from './routes'
