@@ -168,21 +168,31 @@
             },
 
             handleLogin: function () {
+                let loader = this.$loading.show({
+                    container: this.$refs.formContainer,
+                });
+
                 this.$http.post('login', {
                     email: this.user.email,
                     password: this.user.password,
                     remember_me: this.user.remember_me
                 }).then(function (data) {
+                    loader.hide();
                     window.location.reload();
                 });
             },
 
             handleSignUp: function () {
+                let loader = this.$loading.show({
+                    container: this.$refs.formContainer,
+                });
+
                 this.$http.post('register', {
                     email: this.guest.email,
                     name: this.guest.name,
                     password: this.guest.password
                 }).then(function (data) {
+                    loader.hide();
                     window.location.reload();
                 });
             }

@@ -62,6 +62,21 @@
         font-size: 1rem;
     }
 
+    .title_huge {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .title_big {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .title_small {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
     .pd5 {
         padding: 5px
     }

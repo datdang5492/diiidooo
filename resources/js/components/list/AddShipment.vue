@@ -109,7 +109,8 @@
                                 <div class="col-lg-12 text-center">
                                     <div class="card" style="width: 18rem;">
                                         <div class="card-body">
-                                            <h5 class="card-title">Tips <span> <i class="fas fa-info-circle"></i></span></h5>
+                                            <h5 class="card-title">Tips <span> <i class="fas fa-info-circle"></i></span>
+                                            </h5>
                                             <p class="card-text">Estimate the date you will deliver the package after
                                                 you arrive to the
                                                 destination city.
@@ -741,7 +742,7 @@
                 shipmentId: '',
                 date: new Date(),
                 dateOptions: {
-                    format: 'DD/MM/YYYY',
+                    format: 'YYYY/MM/DD',
                     useCurrent: false,
                 },
 
@@ -821,15 +822,22 @@
                 });
             },
 
+
+            // todo: check if this work
             // to display suffix currency Name
             getCurrencyName: function (currencyCode) {
                 if (currencyCode in this.allowedCurrency) {
-                    return this.allowedCurrency.currencyCode
+                    return this.allowedCurrency.currencyCode;
+                    // return this.allowedCurrency[currencyCode];
                 }
                 return null;
             },
 
             getAdData: function (adId) {
+                let loader = this.$loading.show({
+                    container: this.$refs.formContainer,
+                });
+
                 if (adId === undefined || adId === '') {
                     return;
                 }
@@ -840,13 +848,13 @@
                         if (res.body.id !== undefined) {
                             this.shipmentId = res.body.id;
                         }
-
                         this.shipmentData = res.body.data;
-
                     } else {
                         this.errorMsg = res.body.message;
                     }
+                    loader.hide();
                 }).catch(function (res) {
+                    loader.hide();
                     if (!res.ok) {
                         this.showErrorMessage('Something wrong happened!');
                     }
@@ -854,6 +862,9 @@
             },
 
             getStepOneData: function () {
+                let loader = this.$loading.show({
+                    container: this.$refs.formContainer,
+                });
                 this.$http.post(`get-step-one`).then(function (res) {
                     if (res.status === 200) {
                         if (res.body.id !== undefined) {
@@ -863,8 +874,10 @@
                     } else {
                         this.errorMsg = res.body.message;
                     }
+                    loader.hide();
 
                 }).catch(function (res) {
+                    loader.hide();
                     if (!res.ok) {
                         this.showErrorMessage('Something wrong happened!');
                     }
@@ -873,6 +886,10 @@
             },
 
             publish: function () {
+                let loader = this.$loading.show({
+                    container: this.$refs.formContainer,
+                });
+
                 if (this.shipmentId === '' || this.shipmentId === undefined) {
                     return;
                 }
@@ -880,11 +897,12 @@
                 postData.adId = this.shipmentId;
 
                 this.$http.post(`become-a-shipper/publish/`, postData).then(function (res) {
-                    console.log(res);
                     if (res.status === 200) {
                         this.shipmentData = res.body.data;
                     }
+                    loader.hide();
                 }).catch(function (res) {
+                    loader.hide();
                     if (!res.ok) {
                         this.showErrorMessage('Can not publish shipment!');
                     }

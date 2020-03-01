@@ -26,3 +26,4 @@ Route::post('become-a-shipper/publish', 'AdvertisementController@publish')->midd
 
 // FILTER SHIPMENT
 Route::post('shipment/filter', 'Shipment\FilterController@filter');
+Route::post('shipment/detail', 'Shipment\FilterController@getShipmentDetail');

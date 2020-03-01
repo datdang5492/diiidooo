@@ -338,13 +338,64 @@ class AdvertisementRepository
         $query .= $conditionStatement . $returnStatement;
         $records = $this->neo4jClient->run($query, $params)->records();
 
-        foreach($records as $key => $record){
+        foreach ($records as $key => $record) {
             $result[] = $record->get('data');
             $result[$key]['flightDate'] = $this->convertFrontendDate($result[$key]['flightDate']);
             $result[$key]['expectedDeliveryDate'] = $this->convertFrontendDate($result[$key]['flightDate']);
         }
 
         return $result;
+    }
+
+    /**
+     * @desc get all detail of shipment to display in shipment detail page
+     * @param string $uuid
+     * @return array
+     */
+    public function getShipment(string $uuid): array
+    {
+        try {
+            $query = 'MATCH (ad:Advertisement{uuid:$uuid}) 
+            MATCH (ad)-[:FROM]-(from:City)
+            MATCH (ad)-[:TO]-(to:City) 
+            MATCH (u:User)-[:POST]->(ad)
+            WHERE ad.status = TRUE
+            RETURN {
+                    adId : ad.uuid,
+                    flightFrom : from.name,
+                    flightTo : to.name,
+                    flightDate : toString(ad.flightDate),
+                    expectedDeliveryDate : toString(ad.expectedDeliveryDate),
+                    availableWeight: toFloat(ad.availableWeight),
+                    currency: ad.currency,
+                    price: ad.price,
+                    homePickup: ad.homePickup,
+                    deliverDocument: ad.deliverDocument,
+                    priceDocument: ad.priceDocument,
+                    discount: ad.discount,
+                    allowedItems: ad.allowedItems,
+                    shipmentNote: ad.shipmentNote
+                } as shipment, {
+                    lastName: u.lastName,
+                    firstName: u.firstName,
+                    idVerified: u.id_verified,
+                    rating: u.rating,
+                    reviews: COUNT(u.reviews),
+                    profilePic: u.profile_pic,
+                    fbVerified: u.facebookVerified,
+                    idVerified: u.idVerified
+                } as user';
+
+            $data = $this->neo4jClient->run($query, ['uuid' => $uuid])
+                ->firstRecord();
+
+            return [
+                'shipment' => $data->get('shipment'),
+                'user' => $data->get('user')
+            ];
+        } catch (Exception $e) {
+            return [];
+        }
     }
 
 }

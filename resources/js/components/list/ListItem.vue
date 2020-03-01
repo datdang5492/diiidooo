@@ -1,8 +1,9 @@
 <template>
     <div class="row listing_row mb-5" v-if="Array.isArray(shipmentChunk) && shipmentChunk.length !== 0">
         <div class="col-lg-6" v-for="shipment of shipmentChunk" v-bind:key="shipment.uuid">
-            <a v-bind:href="'/list/item/detail/' + shipment.adId">
-                <div class="card card-body listing_box">
+            <a v-bind:href="'/list/detail/' + shipment.adId">
+                <div class="card card-body listing_box" @mouseover="hover = true"
+                     @mouseleave="hover = false" :class="{ shadow: hover }">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="">
@@ -59,9 +60,15 @@
             index: Number,
         },
         data() {
-            return {};
+            return {
+                hover: false
+            };
         },
-        methods: {},
+        methods: {
+            shadow: function () {
+
+            }
+        },
         created: function () {
         }
     };
@@ -91,7 +98,7 @@
         font-size: large;
     }
 
-    .listing_row a{
+    .listing_row a {
         color: #484848;
         text-decoration: none;
     }

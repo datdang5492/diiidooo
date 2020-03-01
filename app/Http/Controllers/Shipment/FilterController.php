@@ -63,6 +63,27 @@ class FilterController extends Controller
         }
     }
 
+    public function getShipmentDetail(Request $request)
+    {
+        $this->validate($request, [
+            'uuid' => 'required|size:36'
+        ]);
+
+        try {
+            $uuid = $request->input('uuid');
+            $data = $this->adRepository->getShipment($uuid);
+
+            //todo : get reviews
+            $data['reviews'] = [];
+            return response()->json($data, 200);
+
+        } catch (Exception $e) {
+            dd($e->getMessage());
+            return response()->json(['message' => $e->getMessage()], 500);
+//            return response()->json(['message' => 'Something wrong happened!'], 500);
+        }
+    }
+
     private function sortByField(array &$arrData, string $field, bool $topDown = true): void
     {
         usort($arrData, function ($a, $b) use ($field, $topDown) {
@@ -85,7 +106,7 @@ class FilterController extends Controller
         $this->validate($request, [
             'fromCity' => 'required|alpha|max:25',
             'toCity' => 'required|alpha|max:25',
-            'expected_delivery_date' => 'date_format:d/m/Y',
+            'expected_delivery_date' => 'date_format:Y/m/d',
             'document' => 'boolean',
             'min_price' => 'numeric',
             'max_price' => 'numeric',

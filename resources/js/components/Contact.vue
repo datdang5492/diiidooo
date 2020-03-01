@@ -32,9 +32,9 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Message</label>
+                                    <label for="message">Message</label>
                                     <textarea
-                                        id="exampleInputEmail1"
+                                        id="message"
                                         class="form-control mb-4"
                                         rows="10"
                                         placeholder="Enter your message..."

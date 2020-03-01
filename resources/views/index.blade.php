@@ -18,7 +18,7 @@
         <footer>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container">
-                    <a class="navbar-brand" href="#">DiDo - Deliver is easy !</a>
+                    <a class="navbar-brand" href="#">DelioShip - Deliver is easy !</a>
                     <button
                         class="navbar-toggler"
                         type="button"

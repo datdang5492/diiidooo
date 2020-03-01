@@ -2,7 +2,7 @@
     <div class="section listing min-height-1000">
         <h3 class="section-title text-center m-5">
             Munich <span><i class="fas fa-plane-departure"></i></span> Hanoi,
-            {{this.$moment(filter.expected_delivery_date, 'YYYY-MM-DD').format('DD.MM.YYYY')}}
+            {{filter.expected_delivery_date | moment("DD.MM.YYYY")}}
         </h3>
         <div class="container text-center">
             <b-dropdown v-on:click="sortShipment(0)" id="datetimeDropdown" text="Sort" class="m-md-2" pill
@@ -69,8 +69,12 @@
                 <b-card>
                     <div class="mb-auto mt-4 row">
                         <div class="col-lg-8 offset-lg-2">
-                            <date-picker @dp-change="closeDatetimePicker()" v-model="filter.expected_delivery_date"
-                                         :config="dateOptions"></date-picker>
+                            <date-picker v-model="filter.expected_delivery_date" :config="dateOptions"></date-picker>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-lg-12 text-center">
+                            <b-button v-on:click="filterWhenDateChange()" size="lg" variant="outline-success">Apply</b-button>
                         </div>
                     </div>
                 </b-card>
@@ -108,7 +112,7 @@
                 toCity: '',
                 showPriceApplyBtn: false,
                 dateOptions: {
-                    format: 'DD/MM/YYYY',
+                    format: 'YYYY/MM/DD',
                     useCurrent: false,
                     inline: true
                 },
@@ -162,15 +166,13 @@
             },
             sortShipment: function (sortOrder) {
                 this.activeSort = sortOrder;
-                // todo: hightlight sort option when selecting
                 this.sort = sortOrder;
                 this.filterShipment();
             },
 
-            closeDatetimePicker: function () {
-                // todo: fix issue of filterShipment twice every time changing date the first time
+            filterWhenDateChange: function () {
                 // close expectedDelivery datepicker dropdown
-                this.$root.$emit('bv::toggle::collapse::false', 'expectedDeliveryDate');
+                this.$root.$emit('bv::toggle::collapse', 'expectedDeliveryDate');
                 this.filterShipment();
             },
 
@@ -183,13 +185,8 @@
 
             filterShipment: function () {
                 let loader = this.$loading.show({
-                    // Optional parameters
-                    container: this.fullPage ? null : this.$refs.formContainer,
+                    container: this.$refs.formContainer,
                 });
-                // // simulate AJAX
-                // setTimeout(() => {
-                //
-                // },5000)
 
                 // todo: improve filter performance
                 let postParam = {
@@ -223,13 +220,15 @@
                     } else {
                         this.errorMsg = res.body.message;
                     }
+                    this.$root.$emit('bv::toggle::collapse::false', 'expectedDeliveryDate');
                     loader.hide();
                 }).catch(function (res) {
+                    loader.hide();
                     if (!res.ok) {
                         this.showErrorMessage('Something wrong happened!');
                     }
-                    loader.hide();
                 });
+
             },
 
             // split array into chunks

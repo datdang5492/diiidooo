@@ -26,11 +26,11 @@
                         <b-form-select v-model="selected_language" :options="languages" size="sm"
                                        class="mr-4 mt-1 lang_select"></b-form-select>
                     </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Shipment status</a>
-                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link" href="#">How it works</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Track Shipment</a>
                     </li>
                     <li class="nav-item" v-if="this.$authStatus === '1'">
                         <a class="nav-link" href="/profile">My Account</a>
@@ -70,7 +70,12 @@
         },
         methods: {
             handleSignOut: function () {
+                let loader = this.$loading.show({
+                    container: this.$refs.formContainer,
+                });
+
                 this.$http.post('logout', {}).then(function (data) {
+                    loader.hide();
                     window.location.reload();
                 });
             },
