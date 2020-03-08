@@ -6,7 +6,7 @@ import photo from './components/profile/media/Photo';
 import review from './components/profile/review/Review';
 import add_shipment from './components/list/AddShipment';
 import shipment_detail from "./components/list/ShipmentDetail";
-import payment from "./components/list/Payment";
+import payment from "./components/list/payment/Payment";
 
 export default [
     {path: '/', component: homepage},
