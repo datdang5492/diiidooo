@@ -7,6 +7,7 @@ import review from './components/profile/review/Review';
 import add_shipment from './components/list/AddShipment';
 import shipment_detail from "./components/list/ShipmentDetail";
 import payment from "./components/list/payment/Payment";
+import tracking from "./components/tracking/Tracking";
 
 export default [
     {path: '/', component: homepage},
@@ -23,5 +24,7 @@ export default [
             {path: 'reviews-about-you', component: review},
             {path: 'reviews-by-you', component: review}
         ]
-    }
+    },
+
+    {path: '/tracking', component: tracking},
 ]
