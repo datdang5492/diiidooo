@@ -8,6 +8,7 @@ import add_shipment from './components/list/AddShipment';
 import shipment_detail from "./components/list/ShipmentDetail";
 import payment from "./components/list/payment/Payment";
 import tracking from "./components/tracking/Tracking";
+import tracking_progress from "./components/tracking/TrackingProgress";
 
 export default [
     {path: '/', component: homepage},
@@ -27,4 +28,6 @@ export default [
     },
 
     {path: '/tracking', component: tracking},
+    {path: '/tracking/progress/:id', component: tracking_progress},
 ]
+

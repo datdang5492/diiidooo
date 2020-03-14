@@ -30,7 +30,7 @@
                         <a class="nav-link" href="#">How it works</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Track Shipment</a>
+                        <a class="nav-link" href="/tracking">Track Shipment</a>
                     </li>
                     <li class="nav-item" v-if="this.$authStatus === '1'">
                         <a class="nav-link" href="/profile">My Account</a>
