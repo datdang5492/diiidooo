@@ -1,15 +1,17 @@
 <template>
     <div class="section listing min-height-1000 justify-content-center">
+        <!--<div class="px-2 row" v-if="shipment !== null">-->
         <div class="px-2 row">
             <div class="col-lg-8 offset-lg-2">
                 <div class="card-header bg-white">
                     <div class="row justify-content-between">
                         <div class="col">
                             <p class="text-muted"> Shipment ID <span
-                                class="font-weight-bold text-dark">1222528743</span>
+                                class="font-weight-bold text-dark">{{shipmentId}}</span>
                             </p>
-                            <p class="text-muted"> Place On <span
-                                class="font-weight-bold text-dark">12,March 2019</span>
+                            <p class="text-muted"> Place On
+                                <span class="font-weight-bold text-dark">12,March 2019</span>
+                                <!--<span class="font-weight-bold text-dark">{{shipment.orderDate}}</span>-->
                             </p>
                         </div>
                         <div class="flex-col my-auto">
@@ -21,12 +23,20 @@
                     <div class="media flex-column flex-sm-row">
                         <div class="media-body ">
                             <h5 class="bold">Munich - Hanoi</h5>
-                            <p class="text-muted"> Weight: 4 kg</p>
-                            <h6 class="mt-3 mb-4 bold">Total price: <span class="mt-5">EUR</span> 4 <span
-                                class="small text-muted">via Paypal </span>
+                            <h6 class="mt-3 mb-4 bold">Total price:
+                                <span class="mt-5">EUR</span> 4
+                                <!--<span class="mt-5">{{shipment.currency}}</span> 4-->
+                                <span class="small text-muted">via </span>
+                                <i class="title-size1 fab fa-paypal text-primary"></i>
+                                <span class="small text-muted"> Paypal</span>
+                                <!--<span class="small text-muted"> {{shipment.paymentMethod}}</span>-->
                             </h6>
-                            <p class="text-muted">Last update on: <span class="Today">11:30pm, Today</span></p>
-                            <!--<button type="button" class="btn some-btn d-flex">Reached Hub, Delhi</button>-->
+                            <p class="text-muted"> Weight: 4 kg</p>
+                            <!--<p class="text-muted"> Weight: {{this.shipment.totalWeight}} kg</p>-->
+                            <p class="text-muted">Last update on:
+                                <span class="Today">11:30pm, March 15, 2020</span>
+                                <!--<span class="Today">{{shipment.lastUpdate}}</span>-->
+                            </p>
                         </div>
                         <img class="align-self-center img-fluid"
                              src="/images/dido_box.jpg"
@@ -49,14 +59,14 @@
                 <div class="card-footer bg-white px-sm-3 pt-sm-4 px-0">
                     <div class="row text-center ">
                         <div class="col my-auto border-line ">
-                            <a>
+                            <router-link class="nav-link active title_size2 font_common" to="/tracking">
                                 <h5><i class="fas fa-chevron-left"></i> Back</h5>
-                            </a>
+                            </router-link>
                         </div>
                         <div class="col my-auto border-line ">
-                            <a>
+                            <router-link class="nav-link active title_size2 font_common" to="/">
                                 <h5>Go to Homepage</h5>
-                            </a>
+                            </router-link>
                         </div>
                     </div>
                 </div>
@@ -71,16 +81,54 @@
         components: {},
         data() {
             return {
+                shipmentId: '',
                 userData: null,
                 errorMsg: '',
                 showErrorMsg: false,
                 infoMsg: '',
                 showInfoMsg: false,
+                shipment: {}
             };
         },
 
-        methods: {},
+        methods: {
+            showErrorMessage: function (message) {
+                this.showErrorMsg = true;
+                this.errorMsg = message;
+            },
+
+            trackShipment: function () {
+                let loader = this.$loading.show({
+                    container: this.$refs.formContainer,
+                });
+
+                var postData = {
+                    shipmentId: this.shipmentId
+                };
+
+                this.$http.post(`shipment/tracking`, postData).then(function (res) {
+                    if (res.status === 200) {
+                        if (res.body.id !== undefined) {
+                            this.shipmentId = res.body.id;
+                        }
+                        // this.shipment = res.body.data;
+                    } else {
+                        this.errorMsg = res.body.message;
+                    }
+                    loader.hide();
+
+                }).catch(function (res) {
+                    loader.hide();
+                    if (!res.ok) {
+                        this.showErrorMessage('Something wrong happened!');
+                    }
+                });
+
+            },
+        },
         created: function () {
+            this.shipmentId = this.$route.params.id;
+            this.trackShipment();
         }
     };
 </script>
@@ -108,27 +156,6 @@
 
     .Today {
         color: rgb(83, 83, 83)
-    }
-
-    .some-btn {
-        background-color: #fff !important;
-        color: #4bb8a9 !important;
-        border: 1.3px solid #4bb8a9;
-        font-size: 12px;
-        border-radius: 0.4em !important
-    }
-
-    .some-btn:hover {
-        background-color: #4bb8a9 !important;
-        color: #fff !important;
-        border: 1.3px solid #4bb8a9
-    }
-
-    .some-btn:focus,
-    .some-btn:active {
-        outline: none !important;
-        box-shadow: none !important;
-        border-color: #42A5F5 !important
     }
 
     #progressbar {
@@ -222,10 +249,6 @@
         background: #4bb8a9
     }
 
-    small {
-        font-size: 12px !important
-    }
-
     .border-line {
         border-right: 1px solid rgb(226, 206, 226)
     }
@@ -233,10 +256,4 @@
     .card-footer img {
         opacity: 0.3
     }
-
-    /*.card-footer h5 {*/
-        /*font-size: 1.1em;*/
-        /*color: #5c85d6;*/
-        /*cursor: pointer*/
-    /*}*/
 </style>

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Repositories\AdvertisementRepository;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class FilterController extends Controller
 {
@@ -15,15 +14,10 @@ class FilterController extends Controller
      */
     private $adRepository;
 
-    /**
-     * @var Str
-     */
-    private $strHelper;
 
-    public function __construct(AdvertisementRepository $adRepository, Str $strHelper)
+    public function __construct(AdvertisementRepository $adRepository)
     {
         $this->adRepository = $adRepository;
-        $this->strHelper = $strHelper;
     }
 
     public function filter(Request $request)

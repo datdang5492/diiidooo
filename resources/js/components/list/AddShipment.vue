@@ -363,8 +363,7 @@
                                         </b-form-textarea>
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                        <span
-                                                            class="text-danger">{{errors.first('shipmentNote')}}</span>
+                                                <span class="text-danger">{{errors.first('shipmentNote')}}</span>
                                             </div>
                                         </div>
                                     </b-card>
@@ -893,7 +892,11 @@
                 if (this.shipmentId === '' || this.shipmentId === undefined) {
                     return;
                 }
-                var postData = {...this.shipmentData.step_1, ...this.shipmentData.step_2, ...this.shipmentData.step_3};
+                var postData = {
+                    ...this.shipmentData.step_1,
+                    ...this.shipmentData.step_2,
+                    ...this.shipmentData.step_3
+                };
                 postData.adId = this.shipmentId;
 
                 this.$http.post(`become-a-shipper/publish/`, postData).then(function (res) {
@@ -918,7 +921,7 @@
                 }
             },
 
-            showErrorMessage(message) {
+            showErrorMessage: function (message) {
                 this.showErrorMsg = true;
                 this.errorMsg = message;
             }
