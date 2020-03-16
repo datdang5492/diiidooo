@@ -108,10 +108,7 @@
 
                 this.$http.post(`shipment/tracking`, postData).then(function (res) {
                     if (res.status === 200) {
-                        if (res.body.id !== undefined) {
-                            this.shipmentId = res.body.id;
-                        }
-                        // this.shipment = res.body.data;
+                        this.shipment = res.body;
                     } else {
                         this.errorMsg = res.body.message;
                     }

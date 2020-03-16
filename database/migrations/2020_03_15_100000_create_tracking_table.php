@@ -14,10 +14,10 @@ class CreateTrackingTable extends Migration
     public function up()
     {
         Schema::create('tracking', function (Blueprint $table) {
-            $table->string('order_id');
+            $table->string('shipment_id');
             $table->string('status');
-            $table->timestamp('created_at');
-            $table->index(['order_id', 'created_at']);
+            $table->dateTime('created_at');
+            $table->index(['shipment_id', 'created_at']);
         });
     }
 
