@@ -1,5 +1,5 @@
 <template>
-    <div class="section listing min-height-1000">
+    <div class="section listing min-height-normal">
         <h3 class="section-title text-center m-5">
             Munich <span><i class="fas fa-plane-departure"></i></span> Hanoi,
             {{filter.expected_delivery_date | moment("DD.MM.YYYY")}}

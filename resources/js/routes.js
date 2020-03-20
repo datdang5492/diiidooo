@@ -10,7 +10,14 @@ import payment from "./components/list/payment/Payment";
 import tracking from "./components/tracking/Tracking";
 import tracking_progress from "./components/tracking/TrackingProgress";
 
+import page_not_found from "./components/error_page/PageNotFound";
+
 export default [
+    {
+        // catch all 404 - define at the very end
+        path: "*",
+        component: page_not_found
+    },
     {path: '/', component: homepage},
     {path: '/list/from/:fromCity/to/:toCity', component: list},
     {path: '/list/detail/:id', component: shipment_detail},

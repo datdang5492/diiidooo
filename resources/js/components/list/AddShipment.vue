@@ -1,5 +1,5 @@
 <template>
-    <div class="min-height-1000 m-4">
+    <div class="min-height-normal m-4">
         <b-alert dismissible variant="danger" v-model="showErrorMsg">{{errorMsg}}</b-alert>
         <b-tabs ref="tabid" v-model="tabIndex" content-class="mt-3" align="center" activate-tab>
             <b-tab title="Step 1: Destination" :title-link-class="linkClass(0)">

@@ -34,9 +34,15 @@
     margin-top: 7.5rem !important;
 }
 
-.min-height-1000 {
+.min-height-normal {
     min-height: 1000px;
 }
+
+.min-height-small {
+    min-height: 651px;
+}
+
+
 
 .title_size1 {
     font-size: 1.25rem;

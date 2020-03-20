@@ -28,7 +28,7 @@ class TrackingController extends Controller
 
         try {
             $shipmentId = $request->input('shipmentId');
-            $data = $this->trackingRepo->getShipmentProgress($shipmentId);
+            $data['progress'] = $this->trackingRepo->getShipmentProgress($shipmentId);
 
             return response()->json($data, 200);
 

@@ -1,7 +1,6 @@
 <template>
-    <div class="section listing min-height-1000 justify-content-center">
-        <!--<div class="px-2 row" v-if="shipment !== null">-->
-        <div class="px-2 row">
+    <div class="section listing min-height-normal justify-content-center">
+        <div class="px-2 row" v-if="shipment !== null">
             <div class="col-lg-8 offset-lg-2">
                 <div class="card-header bg-white">
                     <div class="row justify-content-between">
@@ -34,8 +33,8 @@
                             <p class="text-muted"> Weight: 4 kg</p>
                             <!--<p class="text-muted"> Weight: {{this.shipment.totalWeight}} kg</p>-->
                             <p class="text-muted">Last update on:
-                                <span class="Today">11:30pm, March 15, 2020</span>
-                                <!--<span class="Today">{{shipment.lastUpdate}}</span>-->
+                                <span class="today">11:30pm, March 15, 2020</span>
+                                <!--<span class="today">{{shipment.lastUpdate}}</span>-->
                             </p>
                         </div>
                         <img class="align-self-center img-fluid"
@@ -47,12 +46,17 @@
                 <div class="row px-3">
                     <div class="col">
                         <ul id="progressbar">
-                            <li class="step1 active" id="step1">Shippment placed</li>
-                            <li class="step2 active" id="step2">On the way to Shipper</li>
-                            <li class="step3 active" id="step3">Shipper received</li>
-                            <li class="step4 active" id="step4">On flight</li>
-                            <li class="step5 active" id="step5">Out for delivery in Vietnam</li>
-                            <li class="step6 active" id="step6">Delivered</li>
+                            <li v-for="(item, index) in shipment.progress" class="active"
+                            v-bind:class="getStepClass(index)">
+                                {{item.status}}
+                            </li>
+
+                            <!--<li class="step active">Shipment placed</li>-->
+                            <!--<li class="step active">On the way to Shipper</li>-->
+                            <!--<li class="step active">Shipper received</li>-->
+                            <!--<li class="step active">On flight</li>-->
+                            <!--<li class="step active">Out for delivery in Vietnam</li>-->
+                            <!--<li class="step active">Delivered</li>-->
                         </ul>
                     </div>
                 </div>
@@ -87,11 +91,17 @@
                 showErrorMsg: false,
                 infoMsg: '',
                 showInfoMsg: false,
-                shipment: {}
+                shipment: {
+                }
             };
         },
 
         methods: {
+            getStepClass: function (index){
+                const classNo = index + 1;
+                return "step" + classNo;
+            },
+
             showErrorMessage: function (message) {
                 this.showErrorMsg = true;
                 this.errorMsg = message;
@@ -151,7 +161,7 @@
         letter-spacing: 0.5px !important
     }
 
-    .Today {
+    .today {
         color: rgb(83, 83, 83)
     }
 
@@ -174,42 +184,46 @@
         text-align: center;
     }
 
-    #progressbar #step1:before {
+    #progressbar .step:before {
         content: "1";
         color: #fff;
         width: 29px;
-        /*margin-left: 15px !important;*/
     }
 
-    #progressbar #step2:before {
+    #progressbar .step1:before {
+        content: "1";
+        color: #fff;
+        width: 29px;
+    }
+
+    #progressbar .step2:before {
         content: "2";
         color: #fff;
-        width: 29px
+        width: 29px;
     }
 
-    #progressbar #step3:before {
+    #progressbar .step3:before {
         content: "3";
         color: #fff;
-        width: 29px
+        width: 29px;
     }
 
-    #progressbar #step4:before {
+    #progressbar .step4:before {
         content: "4";
         color: #fff;
-        width: 29px
+        width: 29px;
     }
 
-    #progressbar #step5:before {
+    #progressbar .step5:before {
         content: "5";
         color: #fff;
-        width: 29px
+        width: 29px;
     }
 
-    #progressbar #step6:before {
+    #progressbar .step6:before {
         content: "6";
         color: #fff;
         width: 29px;
-        /*margin-right: 15px !important;*/
     }
 
     #progressbar li:before {

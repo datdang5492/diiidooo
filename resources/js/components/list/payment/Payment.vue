@@ -1,5 +1,5 @@
 <template>
-    <div class="section py-4 min-height-1000">
+    <div class="section py-4 min-height-normal">
         <div class="container" v-if="Object.entries(shipment).length !== 0">
             <div class="row mb-5">
                 <div class="col-lg-10 offset-lg-1">

@@ -1,5 +1,5 @@
 <template>
-    <div class="section py-4 min-height-1000 profile">
+    <div class="section py-4 min-height-normal profile">
         <div class="container">
             <div class="row">
                 <div class="col-md-3 offset-lg-1">
