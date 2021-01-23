@@ -1,0 +1,62 @@
+version: '2'
+services:
+
+  # The Application
+  app:
+    build:
+      context: ./
+      dockerfile: app.dockerfile
+    working_dir: /var/www
+    volumes:
+      - D:\Projects\dido/:/var/www
+    environment:
+      - "DB_PORT=3306"
+      - "DB_HOST=database"
+
+  # The Web Server
+  web:
+    build:
+      context: ./
+      dockerfile: web.dockerfile
+    working_dir: /var/www
+    volumes:
+      - D:\Projects\dido/:/var/www
+    volumes_from:
+      - app
+    ports:
+      - 8080:80
+
+  # The Database
+  database:
+    image: mysql:5.7
+    volumes:
+      - dbdata:/var/lib/mysql
+    environment:
+      - "MYSQL_DATABASE=dido"
+      - "MYSQL_USER=root"
+      - "MYSQL_PASSWORD=password"
+      - "MYSQL_ROOT_PASSWORD=password"
+    ports:
+      - "33061:3306"
+
+  # user: neo4j
+  # pass: password
+  neo4j:
+    image: neo4j:3.5.3
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_dbms_connectors_default_listen_address=0.0.0.0
+      - NEO4J_dbms_connector_http_address=0.0.0.0:7474
+      - NEO4J_dbms_connector_bolt_address=0.0.0.0:7687
+    volumes_from:
+      - app
+    volumes:
+      - ../neo4j/plugins:/plugins
+      - ../neo4j/data:/data
+      - ../neo4j/import:/import
+      - ../neo4j/conf/neo4j.conf:/conf/neo4j.conf
+
+volumes:
+  dbdata:
